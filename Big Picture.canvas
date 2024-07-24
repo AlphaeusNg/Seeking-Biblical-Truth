@@ -1,0 +1,13 @@
+{
+	"nodes":[
+		{"id":"3084856b429f4ab0","type":"text","text":"adawdawd","x":-400,"y":0,"width":250,"height":60},
+		{"id":"a7e540a29efdaffa","type":"text","text":"dwadawd","x":-254,"y":-320,"width":250,"height":60},
+		{"id":"1ad26fda45a1005a","type":"file","file":"Word of God/Hear.md","x":-129,"y":-140,"width":400,"height":400,"color":"3"},
+		{"id":"0966e37fb4b275ba","type":"file","file":"Word of God/Big Topics/Baptism.md","x":-1360,"y":-690,"width":620,"height":690},
+		{"id":"876c3c57f44b03a7","x":-454,"y":-579,"width":450,"height":259,"type":"text","text":"# Word of God\n- Infalliable\n- ..."}
+	],
+	"edges":[
+		{"id":"76d514ad2c867954","fromNode":"3084856b429f4ab0","fromSide":"top","toNode":"a7e540a29efdaffa","toSide":"bottom"},
+		{"id":"f84fc1a39ce31b52","fromNode":"3084856b429f4ab0","fromSide":"bottom","toNode":"1ad26fda45a1005a","toSide":"top"}
+	]
+}
