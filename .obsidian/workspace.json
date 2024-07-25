@@ -77,7 +77,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/Big Topics/Baptism.md",
+                "file": "Meaning of ideas, words/axiom.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "91611c1e1c04ce05",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "My Search for Truth.md",
                 "mode": "source",
                 "source": false
               }
@@ -126,7 +138,7 @@
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -207,7 +219,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Word of God/Big Topics/Baptism.md",
+                "file": "My Search for Truth.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -224,7 +236,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Word of God/Big Topics/Baptism.md",
+                "file": "My Search for Truth.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -247,7 +259,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Word of God/Big Topics/Baptism.md"
+                "file": "My Search for Truth.md"
               }
             }
           },
@@ -280,13 +292,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "0aa7114c0d792262",
+  "active": "91611c1e1c04ce05",
   "lastOpenFiles": [
-    "2024-07-24.md",
     "Word of God/Big Topics/Baptism.md",
+    "My Search for Truth.md",
+    "Meaning of ideas, words/Joshua.md",
+    "Meaning of ideas, words/axiom.md",
+    "Meaning of ideas, words",
+    "2024-07-24.md",
     "Word of God/New Testament/Acts/Acts 2_38.md",
     "Word of God/New Testament/Acts/Acts 22_16.md",
-    "My Search for Truth.md",
     "Word of God/Hear.md",
     "Big Picture.canvas",
     "readMe.md",
