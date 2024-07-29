@@ -89,7 +89,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "My Search for Truth.md",
+                "file": "readMe.md",
                 "mode": "source",
                 "source": false
               }
@@ -190,7 +190,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "link",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -219,7 +219,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "My Search for Truth.md",
+                "file": "readMe.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -236,7 +236,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "My Search for Truth.md",
+                "file": "readMe.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -259,7 +259,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "My Search for Truth.md"
+                "file": "readMe.md"
               }
             }
           },
@@ -292,11 +292,17 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "91611c1e1c04ce05",
+  "active": "1f3351a755ead2e6",
   "lastOpenFiles": [
-    "Word of God/Big Topics/Baptism.md",
+    "Word of God/New Testament/Ephesians/Ephesians.md",
+    "Word of God/New Testament/Ephesians/Eph 5_4-10.md",
     "My Search for Truth.md",
+    "Word of God/New Testament/Ephesians/Eph 5_5.md",
+    "Word of God/New Testament/Ephesians/Eph 5_6.md",
     "Meaning of ideas, words/Joshua.md",
+    "Word of God/Big Topics/Rest.md",
+    "Word of God/Big Topics/False Teachers.md",
+    "Word of God/Big Topics/Baptism.md",
     "Meaning of ideas, words/axiom.md",
     "Meaning of ideas, words",
     "2024-07-24.md",
@@ -310,10 +316,6 @@
     "Word of God/Big Topics",
     "Word of God",
     "Word of God/New Testament/Acts",
-    "Word of God/New Testament/Ephesians/Ephesians.md",
-    "Word of God/New Testament/Ephesians/Eph C5V6.md",
-    "Word of God/New Testament/Ephesians/Eph C5V5.md",
-    "Word of God/New Testament/Ephesians/Eph 5,4-10.md",
     "Eph c5v5.md",
     "Christianity/Ephesians/Eph c5v5.md",
     "Christianity/Ephesians/Eph c5v4.md",

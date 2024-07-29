@@ -1,3 +1,5 @@
+"O wretched man that I am! Who will deliver me from death? Thanks be to God for his grace through Jesus Christ our Lord. For greater love hath no man than this, that while I was a sinner, Christ gave His life for mine." [[Rom 7_24-25]], [[John 15:13]], [[Rom 5_8]]
+
 Perhaps the ultimate principle for the maturest Christian:
 1. Follow Jesus Christ as our Lord and Saviour who has saved us from sin.
 2. Rooted in God's words (to your level of understanding and each ought to be convicted in his position and able to reason through biblical truths/principles while maintaining grace in fringe doctrinal stances)
