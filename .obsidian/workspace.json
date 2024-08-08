@@ -4,141 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "8efcd0b7ac91efca",
+        "id": "f7d05db5b6a8c896",
         "type": "tabs",
         "children": [
           {
-            "id": "c030c3cb092068b8",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {}
-            }
-          },
-          {
-            "id": "8ce7791b7be74b27",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {}
-            }
-          },
-          {
-            "id": "acaa2465b2ff26f3",
+            "id": "093cacf19763155e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/Big Topics/Salvation.md",
+                "file": "Word of God/Big Topics/Relationships.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "b44d726cc4e37600",
+            "id": "a98c2ddb40470e13",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/Big Topics/Baptism.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "5bb217cb18b876e9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/Big Topics/Salvation.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "200f334fc4b37f1e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/Hear.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "0aa7114c0d792262",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Meaning of ideas, words/axiom.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "91611c1e1c04ce05",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "readMe.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1dc55806fcb9d06c",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {}
-            }
-          },
-          {
-            "id": "94d2ff70d46af965",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "readMe.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "78bd8f9181f32941",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.4.16"
-              }
-            }
-          },
-          {
-            "id": "1f19ded3f292f9f3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/Big Topics/Baptism.md",
+                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 7
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -190,7 +84,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#relationships",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -219,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "readMe.md",
+                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -236,7 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "readMe.md",
+                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -259,7 +153,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "readMe.md"
+                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md"
               }
             }
           },
@@ -294,32 +188,41 @@
   },
   "active": "1f3351a755ead2e6",
   "lastOpenFiles": [
+    "Word of God/New Testament/16. 2 Timothy",
+    "Word of God/Big Topics/Relationships.md",
+    "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
+    "Word of God/New Testament/James/James 5_16.md",
+    "Word of God/New Testament/Hebrews/Hebrews 10_24.md",
+    "Word of God/New Testament/10. Ephesians/Ephesians 5_4-10.md",
+    "Word of God/New Testament/9. Galatians/Galatians 6_2.md",
+    "Word of God/New Testament/6. Romans/Romans 15_14.md",
+    "Word of God/New Testament/8. 2 Corinthians",
+    "Word of God/New Testament/7. 1 Corinthians",
+    "Word of God/New Testament/Hebrews",
+    "Word of God/New Testament/6. Romans/Romans 15.md",
+    "Word of God/Big Topics/False Teachers.md",
+    "Word of God/New Testament/5. Acts/Acts 22_16.md",
+    "Word of God/New Testament/5. Acts/Acts 2_38.md",
+    "Word of God/New Testament/James",
     "Word of God/New Testament/Ephesians/Ephesians.md",
-    "Word of God/New Testament/Ephesians/Eph 5_4-10.md",
+    "Paul Washer.md",
+    "Word of God/New Testament/9. Galatians",
+    "Word of God/Big Topics/Salvation.md",
+    "Word of God/Big Topics/Baptism.md",
+    "Word of God/Hear.md",
+    "Meaning of ideas, words/axiom.md",
+    "readMe.md",
+    "God's goodness.md",
+    "Word of God/New Testament/6. Romans",
     "My Search for Truth.md",
     "Word of God/New Testament/Ephesians/Eph 5_5.md",
     "Word of God/New Testament/Ephesians/Eph 5_6.md",
     "Meaning of ideas, words/Joshua.md",
     "Word of God/Big Topics/Rest.md",
-    "Word of God/Big Topics/False Teachers.md",
-    "Word of God/Big Topics/Baptism.md",
-    "Meaning of ideas, words/axiom.md",
     "Meaning of ideas, words",
     "2024-07-24.md",
-    "Word of God/New Testament/Acts/Acts 2_38.md",
-    "Word of God/New Testament/Acts/Acts 22_16.md",
-    "Word of God/Hear.md",
     "Big Picture.canvas",
-    "readMe.md",
-    "Word of God/Big Topics/Salvation.md",
-    "Word of God/Big Topics/Gospel.md",
     "Word of God/Big Topics",
-    "Word of God",
-    "Word of God/New Testament/Acts",
-    "Eph c5v5.md",
-    "Christianity/Ephesians/Eph c5v5.md",
-    "Christianity/Ephesians/Eph c5v4.md",
-    "Word of God/New Testament/Ephesians",
-    "Word of God/New Testament"
+    "Word of God"
   ]
 }

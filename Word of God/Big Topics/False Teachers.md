@@ -1,3 +1,3 @@
 [[Kenneth Copeland]]
 
-[[Paul Washer]]: "False teachers are God's judgement on people who don't want God, but in the name of religion plan on getting everything their carnal heart desires. That's why a Joel Orstein is raised up. People who sit under him, are not victims of him. He is the judgement of God upon them because they want exactly what he wants and it's not God. And you can line them alongside him."
+#Paul_Washer : "False teachers are God's judgement on people who don't want God, but in the name of religion plan on getting everything their carnal heart desires. That's why a Joel Orstein is raised up. People who sit under him, are not victims of him. He is the judgement of God upon them because they want exactly what he wants and it's not God. And you can line them alongside him."
