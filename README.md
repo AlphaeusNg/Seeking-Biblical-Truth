@@ -10,6 +10,8 @@ Welcome to my Obsidian Knowledge Base! This guide is designed to help you access
     - Use GitHub Desktop or any Git client to clone the repository, or simply download the repository as a ZIP file from the GitHub page.
 	    - If using GitHub Desktop, select "Clone a repository" and enter the repository URL: `https://github.com/AlphaeusNg/ObsidianKB.git`.
 	    - If downloading as a ZIP, unzip the file to your desired location.
+      - ![Screenshot to show zipped file download button](https://github.com/user-attachments/assets/5e6587f3-4936-4d24-9e10-ea2d680cf0ac)
+
 1. **Open in Obsidian**:
     - In Obsidian, click on "Open folder as vault" and select the cloned or unzipped folder.
     - Explore the notes and enjoy!
