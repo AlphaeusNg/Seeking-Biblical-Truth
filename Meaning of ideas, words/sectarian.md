@@ -1,0 +1,1 @@
+Defined as a group of believers who believe that they alone consist of the entire Christendom.

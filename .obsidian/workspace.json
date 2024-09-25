@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/Big Topics/Relationships.md",
+                "file": "Word of God/1. Big Topics/Relationships.md",
                 "mode": "source",
                 "source": false
               }
@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
+                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
                 "mode": "source",
                 "source": false
               }
@@ -113,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
+                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,7 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
+                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -153,7 +153,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md"
+                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md"
               }
             }
           },
@@ -186,43 +186,44 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "1f3351a755ead2e6",
+  "active": "a98c2ddb40470e13",
   "lastOpenFiles": [
-    "Word of God/New Testament/16. 2 Timothy",
-    "Word of God/Big Topics/Relationships.md",
-    "Word of God/New Testament/16. 2 Timothy/2 Timothy 2_22.md",
-    "Word of God/New Testament/James/James 5_16.md",
-    "Word of God/New Testament/Hebrews/Hebrews 10_24.md",
-    "Word of God/New Testament/10. Ephesians/Ephesians 5_4-10.md",
-    "Word of God/New Testament/9. Galatians/Galatians 6_2.md",
-    "Word of God/New Testament/6. Romans/Romans 15_14.md",
-    "Word of God/New Testament/8. 2 Corinthians",
-    "Word of God/New Testament/7. 1 Corinthians",
-    "Word of God/New Testament/Hebrews",
-    "Word of God/New Testament/6. Romans/Romans 15.md",
-    "Word of God/Big Topics/False Teachers.md",
-    "Word of God/New Testament/5. Acts/Acts 22_16.md",
-    "Word of God/New Testament/5. Acts/Acts 2_38.md",
-    "Word of God/New Testament/James",
+    "Heritage Christian University/Biblical Preaching/My background.md",
+    "Word of God/3. Old Testament/Psalm/Psalms 23.md",
+    "Word of God/3. Old Testament/Psalm",
+    "Word of God/3. Old Testament",
+    "Meaning of ideas, words/sectarian.md",
+    "My Search for Truth.md",
+    "Heritage Christian University/Biblical Preaching",
+    "Heritage Christian University",
+    "God's goodness.md",
+    "Word of God/2. Small Topics/Laziness.md",
+    "Word of God/1. Big Topics/Relationships.md",
+    "Word of God/2. Small Topics",
+    "README.md",
+    "Word of God/4. New Testament/16. 2 Timothy",
+    "Word of God/4. New Testament/16. 2 Timothy/2 Timothy 2_22.md",
+    "Word of God/4. New Testament/James/James 5_16.md",
+    "Word of God/4. New Testament/Hebrews/Hebrews 10_24.md",
+    "Word of God/4. New Testament/10. Ephesians/Ephesians 5_4-10.md",
+    "Word of God/4. New Testament/9. Galatians/Galatians 6_2.md",
+    "Word of God/4. New Testament/6. Romans/Romans 15_14.md",
+    "Word of God/4. New Testament/8. 2 Corinthians",
+    "Word of God/4. New Testament/7. 1 Corinthians",
+    "Word of God/4. New Testament/Hebrews",
+    "Word of God/4. New Testament/6. Romans/Romans 15.md",
+    "Word of God/1. Big Topics/False Teachers.md",
+    "Word of God/4. New Testament/5. Acts/Acts 22_16.md",
+    "Word of God/4. New Testament/5. Acts/Acts 2_38.md",
+    "Word of God/4. New Testament/James",
     "Word of God/New Testament/Ephesians/Ephesians.md",
     "Paul Washer.md",
-    "Word of God/New Testament/9. Galatians",
-    "Word of God/Big Topics/Salvation.md",
-    "Word of God/Big Topics/Baptism.md",
+    "Word of God/1. Big Topics/Salvation.md",
+    "Word of God/1. Big Topics/Baptism.md",
     "Word of God/Hear.md",
     "Meaning of ideas, words/axiom.md",
     "readMe.md",
-    "God's goodness.md",
-    "Word of God/New Testament/6. Romans",
-    "My Search for Truth.md",
     "Word of God/New Testament/Ephesians/Eph 5_5.md",
-    "Word of God/New Testament/Ephesians/Eph 5_6.md",
-    "Meaning of ideas, words/Joshua.md",
-    "Word of God/Big Topics/Rest.md",
-    "Meaning of ideas, words",
-    "2024-07-24.md",
-    "Big Picture.canvas",
-    "Word of God/Big Topics",
-    "Word of God"
+    "Big Picture.canvas"
   ]
 }
