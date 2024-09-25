@@ -17,3 +17,6 @@ Preliminary point: The King's journey is our journey too
 	1. Praise God for being our shepherd who leads & guides us to life restored.
 	2. Ask God to help us keep on the right track, even if it brings u through the darkest valley. Ask him to comfort us, knowing he is with us
 	3. Pray that we put our hope in our secure future in the LORD's house forever.
+
+Quotes:
+- Some people think they're never ready, but that's believing that sufficiency comes from you, and not God.
