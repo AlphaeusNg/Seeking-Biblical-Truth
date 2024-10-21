@@ -1,0 +1,1 @@
+Equipping the Saints' notes: https://docs.google.com/document/d/1kvXlt7iyszBcK1UgzYI4u0QZ4ClRPms-_A0Ln0Z4Ukg/edit?tab=t.0
