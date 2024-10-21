@@ -1,0 +1,21 @@
+1. Rehab vs Achan.
+    - The story of the conquest of Jericho paints a bigger picture! Why was so much time poured into Rahab at the start? And the story of Achan at the end?
+        - Chapter 1: Israel begins its conquest of the Promised Land
+        - Chapter 2: The story of Rahab the harlot and her faith
+        - Chapter 3-5: Israel prepares to attack Jericho (Rahab's city)
+        - Chapter 6: The capture and destruction of Jericho
+        - Chapter 7: The story of Achan and his disobedience
+    - The crazy parallels between those two:
+        - Canaanite woman vs Hebrew man (tribe of Judah)
+        - Prostitute vs Respectable
+        - Should have died, but survived vs Should have prospered, but died
+        - Her family survives vs His family perishes
+        - Her nation perishes <> Nation prospers
+        - Hides the spies from the King <> Hides loot from God and Joshua
+        - Fears the God of Israel <> Does not fear God of Israel
+        - Has only heard of God, yet believes <> Has seen the acts of God, disobeys
+        - Her house survives, but city burned <> His tent is burned
+        - Cattle, sheep, donkeys in Jericho perish <> His cattle, sheep, donkeys perish
+        - Becomes like an Israelite and lives <> Becomes like a Cannanite and dies
+    - Canaanite becomes an Israelite, the Israelite becomes Canaanites! 
+    - Two diff ppl because of their faith in God, change places!

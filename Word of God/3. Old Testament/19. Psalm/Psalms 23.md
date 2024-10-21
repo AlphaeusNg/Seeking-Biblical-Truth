@@ -1,4 +1,4 @@
-Intro: The Lord is my ...?
+git addIntro: The Lord is my ...?
 
 Preliminary point: The King's journey is our journey too
 
