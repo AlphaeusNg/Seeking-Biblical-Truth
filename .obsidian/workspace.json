@@ -13,10 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/1. Big Topics/Relationships.md",
+                "file": "Word of God/1. Topics/Relationships.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "Relationships"
             }
           },
           {
@@ -25,10 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
+                "file": "Word of God/1. Topics/Baptism.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "Baptism"
             }
           }
         ],
@@ -52,7 +56,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -67,7 +73,9 @@
                   "y": 0,
                   "zoom": 0
                 }
-              }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "Big Picture"
             }
           },
           {
@@ -75,7 +83,9 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           },
           {
@@ -90,7 +100,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           }
         ]
@@ -113,7 +125,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
+                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,7 +133,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Psalms 23"
             }
           },
           {
@@ -130,10 +144,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md",
+                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Psalms 23"
             }
           },
           {
@@ -144,7 +160,9 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
-              }
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -153,8 +171,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Word of God/3. Old Testament/Psalm/Psalms 23.md"
-              }
+                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Psalms 23"
             }
           },
           {
@@ -166,7 +186,9 @@
                 "sortOrder": "frequency",
                 "showSearch": false,
                 "searchQuery": ""
-              }
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
             }
           }
         ]
@@ -188,19 +210,32 @@
   },
   "active": "a98c2ddb40470e13",
   "lastOpenFiles": [
+    "Word of God/1. Topics/False Teachers.md",
+    "Word of God/1. Topics/Rest.md",
+    "Word of God/3. Old Testament/Homiletic notes.md",
+    "Word of God/Hear.md",
+    "My Search for Truth.md",
+    "README.md",
+    "Big Picture.canvas",
+    "God's goodness.md",
+    "Paul Washer.md",
+    "Word of God/1. Topics/Baptism.md",
+    "Word of God/1. Topics/Salvation.md",
+    "Believes.md",
+    "Word of God/1. Topics/Relationships.md",
+    "Word of God/3. Old Testament/19. Psalm/Psalms 23.md",
+    "Word of God/3. Old Testament/6. Joshua/Joshua 1-7.md",
+    "Word of God/3. Old Testament/18. Job/Job.md",
+    "Word of God/3. Old Testament/18. Job",
+    "Word of God/3. Old Testament/6. Joshua",
     "Heritage Christian University/Biblical Preaching/My background.md",
-    "Word of God/3. Old Testament/Psalm/Psalms 23.md",
-    "Word of God/3. Old Testament/Psalm",
+    "Word of God/3. Old Testament/19. Psalm",
     "Word of God/3. Old Testament",
     "Meaning of ideas, words/sectarian.md",
-    "My Search for Truth.md",
     "Heritage Christian University/Biblical Preaching",
     "Heritage Christian University",
-    "God's goodness.md",
-    "Word of God/2. Small Topics/Laziness.md",
-    "Word of God/1. Big Topics/Relationships.md",
+    "Word of God/1. Topics/Laziness.md",
     "Word of God/2. Small Topics",
-    "README.md",
     "Word of God/4. New Testament/16. 2 Timothy",
     "Word of God/4. New Testament/16. 2 Timothy/2 Timothy 2_22.md",
     "Word of God/4. New Testament/James/James 5_16.md",
@@ -210,20 +245,7 @@
     "Word of God/4. New Testament/6. Romans/Romans 15_14.md",
     "Word of God/4. New Testament/8. 2 Corinthians",
     "Word of God/4. New Testament/7. 1 Corinthians",
-    "Word of God/4. New Testament/Hebrews",
     "Word of God/4. New Testament/6. Romans/Romans 15.md",
-    "Word of God/1. Big Topics/False Teachers.md",
-    "Word of God/4. New Testament/5. Acts/Acts 22_16.md",
-    "Word of God/4. New Testament/5. Acts/Acts 2_38.md",
-    "Word of God/4. New Testament/James",
-    "Word of God/New Testament/Ephesians/Ephesians.md",
-    "Paul Washer.md",
-    "Word of God/1. Big Topics/Salvation.md",
-    "Word of God/1. Big Topics/Baptism.md",
-    "Word of God/Hear.md",
-    "Meaning of ideas, words/axiom.md",
-    "readMe.md",
-    "Word of God/New Testament/Ephesians/Eph 5_5.md",
-    "Big Picture.canvas"
+    "Word of God/4. New Testament/5. Acts/Acts 22_16.md"
   ]
 }

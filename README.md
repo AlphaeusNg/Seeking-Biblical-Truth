@@ -53,6 +53,11 @@ Main goal that everyone should have being on the app - **An open search for the 
 - Should be a visualisation as seen in Obsidian visualisation
   - Think of how to categorise ideas. Obsidian has a limitation where it doesn't allow an idea to subsume a sub-idea. E.g. If I have a node titled 'Ephesians', but I also want to visualise Eph 1:2, it won't appear as two distinct nodes. I want it so that when i click on the 'Ephesians' node, it'll expand and show all the smaller Ephesian nodes in it.
 
+
+# Resources
+Thoughts on the Bible: https://docs.google.com/document/d/1Xb46dDpXdGp3hn8I7LrbZVnPESaVp7uEMHAo_5Cy_-Y/edit?tab=t.0#heading=h.g6c4oj9201ud
+
+
 # Spiritual-to-do
 1. Firm up on the COC doctrinal stance and explore deeply our positions on it.
 	1. https://www.christianity.com/church/denominations/churches-of-christ-10-things-to-know-about-their-history-and-beliefs.html
