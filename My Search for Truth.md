@@ -20,3 +20,15 @@ Thoughts:
 	1. Leads to forgiveness, leads people to living their life in a way that's congruent with reality?
 
 [[Baptism]]
+
+31/12/2025
+Questions I want to be an expert on for the sake of my ministry with the people around me.
+1. [[Why it's not biblical to condemn musical instruments in worship]]
+2. [[Women role in ministry]]
+	1. Regarding prayer in front of men
+	2. Leading bible studies
+3. [[The purpose of Baptism]] and all the fringe details such as:
+	1. Various kinds of Baptizo: Spirit, Water, Fire, Moses?
+4. [[The essence of who God and Jesus desires for our heart]].
+	1. Life and Truth, Holiness and Love, Grace and Peace?
+5. [[Helpful traditions of COC heritage vs unhelpful principles]].

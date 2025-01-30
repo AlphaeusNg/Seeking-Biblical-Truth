@@ -13,4 +13,5 @@ What does scripture say about it?
 
 
 How is it linked to salvation?
+[[The purpose of Baptism]]
 
