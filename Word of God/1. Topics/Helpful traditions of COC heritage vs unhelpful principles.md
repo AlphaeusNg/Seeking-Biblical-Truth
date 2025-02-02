@@ -53,7 +53,7 @@ The Church of Christ (COC) has a rich heritage rooted in a desire for biblical f
         
     - The Bible does not explicitly authorize **meeting in church buildings**, yet this practice is accepted.
         
-- A more biblical approach would be **to allow silence where Scripture does** and focus on positive instruction rather than assumed prohibitions (Col 3:17).
+- A more biblical approach would be **to allow silence where Scripture does** and focus on positive instruction rather than assumed prohibitions ([[Col 3_17]]).
     
 
 ### **2. A Strict Patternism That Misses the Heart of Worship**
@@ -107,4 +107,5 @@ The Church of Christ has a heritage that emphasizes biblical authority, congrega
 
 
 
-To be asked: Your point on strict patternism is not explained well enough, please elaborate further on why COC demonstrates that and why the Bible does not stand for their practices
+To be asked: Your point on strict patternism is not explained well enough, please elaborate further on why COC demonstrates that and why the Bible does not stand for their practices. 
+The verses quoted also don't seem to make sense, need to explain further.

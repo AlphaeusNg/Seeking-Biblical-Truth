@@ -58,19 +58,19 @@ Since **women like Priscilla (Acts 18:26)** and older women (Titus 2:3-5) clearl
 ### **B. Biblical Examples of Women Teaching**
 
 1. **Priscilla Taught Apollos (Acts 18:26)**
-    
     - Priscilla, alongside her husband Aquila, **taught** the preacher Apollos **correct doctrine**.
-    - The text **does not suggest her teaching was improper.**
+    - The text **does not suggest her teaching was improper.
+      
 2. **Women as Prophets in the Early Church**
-    
     - **Acts 21:9** – Philip’s four daughters **prophesied**, which biblically involves **exhortation, encouragement, and instruction.**
     - **Joel 2:28-29 (fulfilled in Acts 2:17-18)** – God poured out His Spirit on **sons and daughters** to prophesy.
+      
 3. **Titus 2:3-5 – Older Women Teaching Younger Women**
-    
     - Women **are explicitly commanded** to **teach** younger women, which means teaching is **not inherently forbidden.**
+      
 4. **Women Were Apostolic Co-Workers**
-    
     - **Romans 16:1-7** lists several women involved in ministry, including **Phoebe (a deacon), Junia (a prominent apostle), and Priscilla (a teacher).**
+      
 
 ### **C. The Key Issue: Authority, Not Teaching**
 

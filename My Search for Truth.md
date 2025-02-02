@@ -21,7 +21,7 @@ Thoughts:
 
 [[Baptism]]
 
-31/12/2025
+31/1/2025
 Questions I want to be an expert on for the sake of my ministry with the people around me.
 1. [[Why it's not biblical to condemn musical instruments in worship]]
 2. [[Women role in ministry]]
