@@ -4,67 +4,34 @@
     "type": "split",
     "children": [
       {
-        "id": "f7d05db5b6a8c896",
+        "id": "311568548e728110",
         "type": "tabs",
         "children": [
           {
-            "id": "093cacf19763155e",
+            "id": "9c658738de1e809d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/1. Topics/Relationships.md",
+                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
                 "mode": "source",
-                "source": false
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
               "icon": "lucide-file",
-              "title": "Relationships"
-            }
-          },
-          {
-            "id": "a98c2ddb40470e13",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
-            }
-          },
-          {
-            "id": "504fcfce439c7316",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/4. New Testament/12. Colossians/Col 3_17.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Col 3_17"
-            }
-          },
-          {
-            "id": "664d5c5f948099df",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/1. Topics/Women role in ministry.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Women role in ministry"
+              "title": "The essence of who God and Jesus desires for our heart"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -123,7 +90,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#relationships",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -149,12 +116,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "3343b56abd0d703a",
+            "id": "2e8c465754816513",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md",
+                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -164,21 +131,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Psalms 23"
-            }
-          },
-          {
-            "id": "c17a78a13a7350d3",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "Outgoing links from Psalms 23"
+              "title": "Backlinks for The essence of who God and Jesus desires for our heart"
             }
           },
           {
@@ -188,7 +141,9 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-tags",
               "title": "Tags"
@@ -200,10 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Word of God/3. Old Testament/19. Psalm/Psalms 23.md"
+                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Psalms 23"
+              "title": "Outline of The essence of who God and Jesus desires for our heart"
             }
           },
           {
@@ -224,7 +182,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -238,8 +196,23 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a98c2ddb40470e13",
+  "active": "9c658738de1e809d",
   "lastOpenFiles": [
+    "Word of God/4. New Testament/6. Romans/Rom 1_16.md",
+    "Word of God/4. New Testament/6. Romans/Romans 15_14.md",
+    "Word of God/1. Topics/Relationships.md",
+    "Word of God/4. New Testament/6. Romans/Romans 15.md",
+    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 1.md",
+    "Word of God/1. Topics/Baptism.md",
+    "Word of God/1. Topics/Salvation.md",
+    "Word of God/1. Topics/Gospel.md",
+    "Word of God/1. Topics/Simple Christianity.md",
+    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 5.md",
+    "Word of God/1. Topics/Women role in ministry.md",
+    "Word of God/4. New Testament/12. Colossians/Col 3_17.md",
+    "README.md",
+    "Word of God/1. Topics/The purpose of Baptism.md",
+    "Word of God/1. Topics/Helpful traditions of COC heritage vs unhelpful principles.md",
     "My Search for Truth.md",
     "Heritage Christian University/Biblical Preaching/My background.md",
     "mintty.2025-01-31_03-17-30.png",
@@ -249,25 +222,11 @@
     "Word of God/4. New Testament/9. Galatians/Galatians 6_2.md",
     "Word of God/4. New Testament/10. Ephesians/Ephesians 5_4-10.md",
     "Word of God/4. New Testament/12. Colossians",
-    "Word of God/1. Topics/Women role in ministry.md",
-    "Word of God/1. Topics/Helpful traditions of COC heritage vs unhelpful principles.md",
-    "Word of God/4. New Testament/12. Colossians/Col 3_17.md",
     "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
-    "Word of God/1. Topics/The purpose of Baptism.md",
-    "Word of God/1. Topics/Baptism.md",
     "Word of God/1. Topics/Why it's not biblical to condemn musical instruments in worship.md",
-    "Word of God/1. Topics/Relationships.md",
     "Word of God/1. Topics/Worship.md",
     "Word of God/1. Topics/False Teachers.md",
-    "Word of God/1. Topics/Rest.md",
-    "Word of God/3. Old Testament/Homiletic notes.md",
-    "Word of God/Hear.md",
-    "README.md",
     "Big Picture.canvas",
-    "God's goodness.md",
-    "Paul Washer.md",
-    "Word of God/1. Topics/Salvation.md",
-    "Believes.md",
     "Word of God/3. Old Testament/18. Job",
     "Word of God/3. Old Testament/6. Joshua",
     "Word of God/3. Old Testament/19. Psalm",
