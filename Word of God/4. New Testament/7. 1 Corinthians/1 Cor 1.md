@@ -20,3 +20,6 @@ Christ the Wisdom and Power of God
 20 Where is the one who is wise? Where is the scribe? Where is the debater of this age? Has not God made foolish the wisdom of the world? 21 For since, in the wisdom of God, the world did not know God through wisdom, it pleased God through the folly of what we preach[b] to save those who believe. 22 For Jews demand signs and Greeks seek wisdom, 23 but we preach Christ crucified, a stumbling block to Jews and folly to Gentiles, 24 but to those who are called, both Jews and Greeks, Christ the power of God and the wisdom of God. 25 For the foolishness of God is wiser than men, and the weakness of God is stronger than men.
 
 26 For consider your calling, brothers: not many of you were wise according to worldly standards,[c] not many were powerful, not many were of noble birth. 27 But God chose what is foolish in the world to shame the wise; God chose what is weak in the world to shame the strong; 28 God chose what is low and despised in the world, even things that are not, to bring to nothing things that are, 29 so that no human being[d] might boast in the presence of God. 30 And because of him[e] you are in Christ Jesus, who became to us wisdom from God, righteousness and sanctification and redemption, 31 so that, as it is written, “Let the one who boasts, boast in the Lord.”
+
+---
+#doctrine #relationships
