@@ -1,9 +1,9 @@
 {
   "collapse-filter": false,
   "search": "",
-  "showTags": false,
+  "showTags": true,
   "showAttachments": false,
-  "hideUnresolved": false,
+  "hideUnresolved": true,
   "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
@@ -12,6 +12,13 @@
       "color": {
         "a": 1,
         "rgb": 14069084
+      }
+    },
+    {
+      "query": "#doctrine",
+      "color": {
+        "a": 1,
+        "rgb": 11657298
       }
     },
     {
@@ -32,6 +39,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.6661228611478779,
-  "close": false
+  "scale": 0.6661228611478783,
+  "close": true
 }

@@ -13,22 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
+                "file": "Heritage Christian University/MN50002 Theological Education and Research/How to research.md",
                 "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "The essence of who God and Jesus desires for our heart"
+              "title": "How to research"
             }
           }
         ]
@@ -105,7 +95,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 497.5
+    "width": 200
   },
   "right": {
     "id": "792e52a13de2ed80",
@@ -121,7 +111,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +120,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for The essence of who God and Jesus desires for our heart"
+              "title": "Backlinks"
             }
           },
           {
@@ -155,13 +144,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of The essence of who God and Jesus desires for our heart"
+              "title": "Outline"
             }
           },
           {
@@ -176,6 +164,20 @@
               },
               "icon": "lucide-archive",
               "title": "All properties"
+            }
+          },
+          {
+            "id": "32a9d4a2a55d1471",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Word of God/1. Topics/Simple Christianity.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Simple Christianity"
             }
           }
         ]
@@ -198,23 +200,26 @@
   },
   "active": "9c658738de1e809d",
   "lastOpenFiles": [
+    "Heritage Christian University/Biblical Preaching/My background.md",
+    "Word of God/1. Topics/Baptism.md",
+    "Heritage Christian University/MN50002 Theological Education and Research/How to research.md",
+    "Heritage Christian University/MN50002 Theological Education and Research",
+    "Word of God/1. Topics/Simple Christianity.md",
+    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 1.md",
+    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 5.md",
+    "Word of God/1. Topics/Helpful traditions of COC heritage vs unhelpful principles.md",
+    "Word of God/1. Topics/Salvation.md",
+    "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
     "Word of God/4. New Testament/6. Romans/Rom 1_16.md",
     "Word of God/4. New Testament/6. Romans/Romans 15_14.md",
     "Word of God/1. Topics/Relationships.md",
     "Word of God/4. New Testament/6. Romans/Romans 15.md",
-    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 1.md",
-    "Word of God/1. Topics/Baptism.md",
-    "Word of God/1. Topics/Salvation.md",
     "Word of God/1. Topics/Gospel.md",
-    "Word of God/1. Topics/Simple Christianity.md",
-    "Word of God/4. New Testament/7. 1 Corinthians/1 Cor 5.md",
     "Word of God/1. Topics/Women role in ministry.md",
     "Word of God/4. New Testament/12. Colossians/Col 3_17.md",
     "README.md",
     "Word of God/1. Topics/The purpose of Baptism.md",
-    "Word of God/1. Topics/Helpful traditions of COC heritage vs unhelpful principles.md",
     "My Search for Truth.md",
-    "Heritage Christian University/Biblical Preaching/My background.md",
     "mintty.2025-01-31_03-17-30.png",
     "Meaning of ideas, words/axiom.md",
     "Meaning of ideas, words/sectarian.md",
@@ -222,10 +227,8 @@
     "Word of God/4. New Testament/9. Galatians/Galatians 6_2.md",
     "Word of God/4. New Testament/10. Ephesians/Ephesians 5_4-10.md",
     "Word of God/4. New Testament/12. Colossians",
-    "Word of God/1. Topics/The essence of who God and Jesus desires for our heart.md",
     "Word of God/1. Topics/Why it's not biblical to condemn musical instruments in worship.md",
     "Word of God/1. Topics/Worship.md",
-    "Word of God/1. Topics/False Teachers.md",
     "Big Picture.canvas",
     "Word of God/3. Old Testament/18. Job",
     "Word of God/3. Old Testament/6. Joshua",
@@ -234,7 +237,6 @@
     "Heritage Christian University/Biblical Preaching",
     "Heritage Christian University",
     "Word of God/2. Small Topics",
-    "Word of God/4. New Testament/16. 2 Timothy",
-    "Word of God/4. New Testament/8. 2 Corinthians"
+    "Word of God/4. New Testament/16. 2 Timothy"
   ]
 }
