@@ -20,8 +20,51 @@
               "icon": "lucide-file",
               "title": "Titus 1"
             }
+          },
+          {
+            "id": "10adf38000872104",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Word of God/1. Topics/Why it's not biblical to condemn musical instruments in worship.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Why it's not biblical to condemn musical instruments in worship"
+            }
+          },
+          {
+            "id": "40734244fefeafad",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "My Search for Truth.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "My Search for Truth"
+            }
+          },
+          {
+            "id": "ca821db4cdb685ae",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -80,7 +123,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "musical instru",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -198,10 +241,13 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9c658738de1e809d",
+  "active": "1f3351a755ead2e6",
   "lastOpenFiles": [
+    "Word of God/1. Topics/Why it's not biblical to condemn musical instruments in worship.md",
+    "Word of God/1. Topics/Women role in ministry.md",
     "My Search for Truth.md",
     "Word of God/4. New Testament/17. Titus/Titus 1.md",
+    "README.md",
     "Word of God/1. Topics/False Doctrine.md",
     "Word of God/1. Topics/False Teachers.md",
     "Word of God/1. Topics/The purpose of Baptism.md",
@@ -221,14 +267,11 @@
     "Word of God/1. Topics/Relationships.md",
     "Word of God/4. New Testament/6. Romans/Romans 15.md",
     "Word of God/1. Topics/Gospel.md",
-    "Word of God/1. Topics/Women role in ministry.md",
     "Word of God/4. New Testament/12. Colossians/Col 3_17.md",
-    "README.md",
     "mintty.2025-01-31_03-17-30.png",
     "Meaning of ideas, words/axiom.md",
     "Meaning of ideas, words/sectarian.md",
     "Meaning of ideas, words/Joshua.md",
-    "Word of God/4. New Testament/9. Galatians/Galatians 6_2.md",
     "Word of God/4. New Testament/12. Colossians",
     "Big Picture.canvas",
     "Word of God/3. Old Testament/18. Job",
