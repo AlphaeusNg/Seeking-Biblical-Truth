@@ -25,14 +25,10 @@
             "id": "40734244fefeafad",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Word of God/1. Topics/Lord's Supper.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Lord's Supper"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           },
           {
@@ -229,9 +225,11 @@
   },
   "active": "40734244fefeafad",
   "lastOpenFiles": [
+    "Journal/29-Jun-2025.md",
+    "Word of God/1. Topics/Lord's Supper.md",
+    "Journal",
     "Word of God/4. New Testament/2. Mark/Mark 14_23-24.md",
     "Word of God/4. New Testament/1. Matthew/Mat 26_28.md",
-    "Word of God/1. Topics/Lord's Supper.md",
     "Mark 14_23-24.md",
     "Word of God/4. New Testament/2. Mark/Mark 14_22.md",
     "Meaning of ideas, words/axiom.md",
@@ -248,7 +246,6 @@
     "Word of God/4. New Testament/21. 1 Peter",
     "Word of God/4. New Testament/20. James",
     "Word of God/4. New Testament/18. Philemon",
-    "Word of God/4. New Testament/15. 1 Timothy",
     "Word of God/4. New Testament/1. Matthew/Mat 26_26.md",
     "Word of God/4. New Testament/3. Luke/Luk 22_19.md",
     "My Search for Truth.md",
@@ -264,7 +261,6 @@
     "Word of God/1. Topics/False Teachers.md",
     "Word of God/1. Topics/The purpose of Baptism.md",
     "Word of God/1. Topics/Baptism.md",
-    "Heritage Christian University/MN50002 Theological Education and Research/How to research.md",
     "mintty.2025-01-31_03-17-30.png",
     "Big Picture.canvas"
   ]
