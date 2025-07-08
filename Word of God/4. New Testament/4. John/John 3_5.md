@@ -1,7 +1,10 @@
+>5 Jesus answered, “Most assuredly, I say to you, unless one is born of water and the Spirit, he cannot enter the kingdom of God.
+>(NKJV)
+
 8-Jul-2025
 My reflection when Phoebe asked me about this passage:
 
-**To start, John 3:5 is a complicated passage, and we have to approach it carefully with lots of humility and deep reverence for Scripture’s authority! It’s complicated because there are several strong viewpoints, each with varying strengths and weaknesses. In my reflection, I’ll share my understanding: to be “born of water and the Spirit” in John 3:5 is to believe in Jesus and receive the Holy Spirit, not necessarily to be baptized with water. I’ll explain why, using Scripture, and address other views like baptismal regeneration. Let’s dive in.**
+To start, John 3:5 is a **complicated** passage, and we have to approach it carefully with **lots of humility and deep reverence for Scripture’s authority**! It’s complicated because there are several strong viewpoints, each with varying strengths and weaknesses. In my reflection, I’ll share my understanding: to be “born of water and the Spirit” in John 3:5 is to believe in Jesus and receive the Holy Spirit, not necessarily to be baptized with water. I’ll explain why, using Scripture, and address other views like baptismal regeneration. Let’s dive in~
 
 ## **1. The Theme of Believing in Jesus**
 
@@ -13,11 +16,11 @@ We see John the Baptizer baptizing with water for repentance, preparing the way.
 
 ## **3. Old Testament Connections**
 
-**This reminds me of** Ezekiel 36:25–27 and Isaiah 44:2–3, where God promises to pour or sprinkle His Spirit on His children. **These passages link water and the Spirit to cleansing and renewal.** Nicodemus, being a teacher of the law, would’ve known these verses well! **So, when Jesus speaks of being “born of water and the Spirit,” He’s likely drawing on these promises that Nicodemus should recognize.**
+This reminds me of Ezekiel 36:25–27 and Isaiah 44:2–3, where God promises to pour or sprinkle His Spirit on His children. **These passages link water and the Spirit to cleansing and renewal.** Nicodemus, being a teacher of the law, would’ve known these verses well! **So, when Jesus speaks of being “born of water and the Spirit,” He’s likely drawing on these promises that Nicodemus should recognize.**
 
 ## **4. Jesus’ Challenge to Nicodemus**
 
-**Building on this,** Jesus challenges Nicodemus’ understanding in John 3:3 and 3:10, asking what it truly means to be “born again.” He answers while staying consistent with God’s Word from the past. In John 3:15, 16, 18, and 36, it’s clear: whoever believes in Jesus shall not perish but have everlasting life. **So, to be “born again of water and the Spirit” is tied to believing in Jesus.**
+Building on this, Jesus challenges Nicodemus’ understanding in John 3:3 and 3:10, asking what it truly means to be “born again.” He answers while staying consistent with God’s Word from the past. In John 3:15, 16, 18, and 36, it’s clear: whoever believes in Jesus shall not perish but have everlasting life. **So, to be “born again of water and the Spirit” is tied to believing in Jesus.**
 
 ## **5. Born of God, Not of Flesh**
 
@@ -37,4 +40,4 @@ Could baptism be necessary to be “born again of water and the Spirit”? It co
 
 **In humility, I see John 3:5 as spiritual rebirth through faith in Jesus, receiving the Holy Spirit (John 1:12, Ezekiel 36). Baptism pictures this, but faith saves.** We are baptized today in obedience to Jesus’ command (Matthew 28:19), not for salvation (Colossians 3, Romans 4), but as a symbol of being in Christ’s saving work (Galatians 3:26–27, Colossians 2:11–13, Romans 6:4).
 
-**Once again, I recognize that I’m a finite sinner, and there could be inaccuracies! But this view makes sense to me, and I’m convicted of it. I’m open to probing questions as I continue learning!**
+Once again, I recognize that I’m a finite sinner, and there could be inaccuracies! But this view makes sense to me, and I’m convicted of it. I’m open to probing questions as I continue learning!
