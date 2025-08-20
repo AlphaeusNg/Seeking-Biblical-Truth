@@ -1,0 +1,10 @@
+{
+  "bibleVersion": "ESV",
+  "copyFormat": "plain",
+  "copyVerseReference": true,
+  "verseReferenceStyle": "- ",
+  "verseReferenceFormat": "full",
+  "verseReferenceInternalLinking": true,
+  "verseReferenceInternalLinkingFormat": "short",
+  "bibleLanguage": "en"
+}
