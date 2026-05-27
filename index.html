@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeking Biblical Truth • Knowledge Base</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: system-ui, sans-serif; }
+        .vault-header { font-family: Georgia, serif; }
+        .node { cursor: pointer; }
+        .link { stroke: #4B5563; stroke-opacity: 0.6; }
+        .node text { font-size: 11px; pointer-events: none; fill: #E5E7EB; }
+    </style>
+</head>
+<body class="bg-[#0A0F1C] text-[#F3F4F6]">
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex justify-between items-start mb-10">
+            <div>
+                <div class="text-[#C9A227] text-sm tracking-[3px] mb-2">PERSONAL KNOWLEDGE BASE</div>
+                <h1 class="text-6xl tracking-tight vault-header">Seeking Biblical Truth</h1>
+                <p class="text-xl text-[#9CA3AF] mt-3 max-w-md">An open, living Obsidian vault for rigorous exploration of Scripture, doctrine, and truth.</p>
+            </div>
+            <div class="text-right text-sm">
+                <a href="https://github.com/AlphaeusNg/Seeking-Biblical-Truth" class="text-[#C9A227] hover:underline">View on GitHub →</a><br>
+                <span class="text-[#6B7280] text-xs">Clone for full Obsidian experience</span>
+            </div>
+        </div>
+
+        <!-- Interactive Knowledge Graph -->
+        <div class="mb-12">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl tracking-tight">Interactive Vault Graph</h2>
+                <div class="text-xs text-[#6B7280]">Drag • Hover • Search</div>
+            </div>
+            <div id="graph-container" class="bg-[#111827] border border-white/10 rounded-3xl overflow-hidden" style="height: 520px;"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="font-semibold text-lg mb-3 text-[#C9A227]">The Vision</h3>
+                <p class="text-[#9CA3AF]">This vault explores rigorous, communal truth-seeking. One of the core ideas is building better tools for theological dialogue — including community-driven “truth weight” metrics, better summarization, and rich linking/visualization (inspired by Obsidian canvases).</p>
+                
+                <div class="mt-6">
+                    <h4 class="font-medium mb-2">Key Concepts in the Graph</h4>
+                    <ul class="text-sm text-[#9CA3AF] space-y-1">
+                        <li>• Truth Weight &amp; Epistemic Humility</li>
+                        <li>• Logos &amp; rigorous reasoning</li>
+                        <li>• Christian Discussion App prototype ideas</li>
+                        <li>• Deep study of COC doctrine &amp; salvation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-[#111827] border border-white/10 rounded-3xl p-8">
+                <h3 class="font-semibold mb-4">How to Explore</h3>
+                <ol class="text-sm space-y-3 text-[#9CA3AF]">
+                    <li>1. Clone the repo: <code class="text-xs bg-black/50 px-1.5 py-0.5 rounded">git clone https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git</code></li>
+                    <li>2. Open the folder in Obsidian</li>
+                    <li>3. Use the graph view + canvases (especially Big Picture.canvas)</li>
+                    <li>4. Explore the web tools in <code>webapp.py</code> and <code>webapp_v2_grok.py</code></li>
+                </ol>
+                <p class="text-xs mt-6 text-[#6B7280]">This public viewer contains a curated slice of the graph for quick exploration. The full vault has significantly more notes and connections.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lightweight D3 Knowledge Graph (curated slice)
+        const data = {
+            nodes: [
+                {id: "bible", label: "Bible", group: "scripture"},
+                {id: "truth_weight", label: "Truth Weight", group: "doctrine"},
+                {id: "salvation", label: "Salvation", group: "doctrine"},
+                {id: "epistemic", label: "Epistemic Humility", group: "personal"},
+                {id: "discussion_app", label: "Christian Discussion App", group: "vision"},
+                {id: "obsidian", label: "Obsidian Vault", group: "tooling"},
+                {id: "logos", label: "Logos", group: "scripture"},
+                {id: "annotations", label: "Annotation Pipelines", group: "tooling"},
+                {id: "big_picture", label: "Big Picture Canvas", group: "vision"}
+            ],
+            links: [
+                {source: "bible", target: "salvation"},
+                {source: "truth_weight", target: "salvation"},
+                {source: "truth_weight", target: "epistemic"},
+                {source: "truth_weight", target: "discussion_app"},
+                {source: "discussion_app", target: "bible"},
+                {source: "epistemic", target: "logos"},
+                {source: "obsidian", target: "big_picture"},
+                {source: "annotations", target: "obsidian"}
+            ]
+        };
+
+        const width = document.getElementById('graph-container').clientWidth;
+        const height = 520;
+
+        const svg = d3.select("#graph-container").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.links).id(d => d.id).distance(90))
+            .force("charge", d3.forceManyBody().strength(-280))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const link = svg.append("g").selectAll("line").data(data.links).join("line")
+            .attr("stroke", "#4B5563")
+            .attr("stroke-width", 1.5);
+
+        const node = svg.append("g").selectAll("g").data(data.nodes).join("g")
+            .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+        node.append("circle")
+            .attr("r", d => d.group === "doctrine" ? 11 : 8)
+            .attr("fill", d => {
+                if (d.group === "scripture") return "#5B9BD5";
+                if (d.group === "doctrine") return "#C9A227";
+                if (d.group === "vision") return "#9F7AEA";
+                if (d.group === "tooling") return "#4CAF8A";
+                return "#E07A7A";
+            });
+
+        node.append("text")
+            .text(d => d.label)
+            .attr("x", 14)
+            .attr("y", 4)
+            .attr("fill", "#E5E7EB")
+            .attr("font-size", "11px");
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+        }
+        function dragged(event, d) {
+            d.fx = event.x; d.fy = event.y;
+        }
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+        }
+
+        // Simple search (basic implementation)
+        const search = document.createElement('input');
+        // (Add search input in header if desired in future iteration)
+    </script>
+</body>
+</html>
