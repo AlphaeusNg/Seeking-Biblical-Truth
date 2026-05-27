@@ -6,12 +6,16 @@
     <title>Seeking Biblical Truth • Knowledge Base</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- html2canvas lightweight CDN for PNG export (coordinated with main portfolio) -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         body { font-family: system-ui, sans-serif; }
         .vault-header { font-family: Georgia, serif; }
         .node { cursor: pointer; }
         .link { stroke: #4B5563; stroke-opacity: 0.6; }
         .node text { font-size: 11px; pointer-events: none; fill: #E5E7EB; }
+        .kg-btn { font-size: 10px; padding: 2px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); color: #CBD5E1; background: rgba(255,255,255,0.03); transition: all 0.1s ease; cursor: pointer; }
+        .kg-btn:hover { border-color: #C9A227; color: #C9A227; }
     </style>
 </head>
 <body class="bg-[#0A0F1C] text-[#F3F4F6]">
@@ -25,6 +29,12 @@
             <div class="text-right text-sm">
                 <a href="https://github.com/AlphaeusNg/Seeking-Biblical-Truth" class="text-[#C9A227] hover:underline">View on GitHub →</a><br>
                 <span class="text-[#6B7280] text-xs">Clone for full Obsidian experience</span>
+                <!-- Featured badge: tight integration with main portfolio -->
+                <div class="mt-2">
+                    <a href="https://alphaeusng.github.io" target="_blank" 
+                       class="inline-block text-[10px] px-2.5 py-0.5 rounded-full border border-[#C9A227]/50 text-[#C9A227] hover:bg-[#C9A227] hover:text-[#0A0F1C] transition"
+                       title="This interactive slice is also embedded in the main portfolio case study">Featured on main portfolio ↗</a>
+                </div>
             </div>
         </div>
 
@@ -32,9 +42,13 @@
         <div class="mb-12">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-2xl tracking-tight">Interactive Vault Graph</h2>
-                <div class="text-xs text-[#6B7280]">Drag • Hover • Search</div>
+                <div class="flex items-center gap-x-3 text-xs text-[#6B7280]">
+                    <span>Drag • Hover • Search</span>
+                    <button onclick="exportViewerPNG()" class="kg-btn" title="Export this graph view to PNG (dark theme)">Export PNG</button>
+                </div>
             </div>
             <div id="graph-container" class="bg-[#111827] border border-white/10 rounded-3xl overflow-hidden" style="height: 520px;"></div>
+            <div class="mt-2 text-[10px] text-[#6B7280]">Curated public slice. Full vault contains 20+ concepts across Scripture, Doctrine, Tooling, Vision &amp; Personal (Word of God, Journal, Heritage Christian University, Big Picture.canvas, bible_repo, Meaning of ideas/words...).</div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8">
@@ -61,7 +75,7 @@
                     <li>3. Use the graph view + canvases (especially Big Picture.canvas)</li>
                     <li>4. Explore the web tools in <code>webapp.py</code> and <code>webapp_v2_grok.py</code></li>
                 </ol>
-                <p class="text-xs mt-6 text-[#6B7280]">This public viewer contains a curated slice of the graph for quick exploration. The full vault has significantly more notes and connections.</p>
+                <p class="text-xs mt-6 text-[#6B7280]">This public viewer contains a curated slice of the graph for quick exploration. The full vault has significantly more notes and connections. The same aesthetic powers the interactive graph in the main portfolio.</p>
             </div>
         </div>
     </div>
@@ -92,7 +106,8 @@
             ]
         };
 
-        const width = document.getElementById('graph-container').clientWidth;
+        const container = document.getElementById('graph-container');
+        const width = container.clientWidth;
         const height = 520;
 
         const svg = d3.select("#graph-container").append("svg")
@@ -150,9 +165,20 @@
             d.fx = null; d.fy = null;
         }
 
-        // Simple search (basic implementation)
-        const search = document.createElement('input');
-        // (Add search input in header if desired in future iteration)
+        // PNG export for dedicated viewer (lightweight, matches portfolio aesthetic)
+        function exportViewerPNG() {
+            const el = document.getElementById('graph-container');
+            if (!el || typeof html2canvas === 'undefined') { alert('Reload to enable PNG export.'); return; }
+            html2canvas(el, { backgroundColor: '#0A0F1C', scale: 2 }).then(c => {
+                const a = document.createElement('a');
+                a.download = 'seeking-biblical-truth-viewer.png';
+                a.href = c.toDataURL('image/png');
+                a.click();
+            });
+        }
+
+        // Optional: basic keyboard search hint (kept minimal)
+        console.log('%c[Seeking Biblical Truth viewer] PNG export + portfolio badge added for graph maturation.', 'color:#475569;font-size:9px');
     </script>
 </body>
 </html>
