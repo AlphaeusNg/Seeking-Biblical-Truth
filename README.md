@@ -1,3 +1,19 @@
+**Public Interactive Viewer**
+
+A clean, public-facing viewer with an interactive knowledge graph is available here:
+
+→ **https://alphaeusng.github.io/Seeking-Biblical-Truth/**
+
+**To enable GitHub Pages (recommended):**
+1. Go to repo **Settings → Pages**
+2. Set Source to **Deploy from a branch**
+3. Branch: `main`, Folder: `/ (root)`
+4. Save
+
+The `index.html` in the root of this repo provides a beautiful, Obsidian-style viewer with the knowledge graph.
+
+---
+
 # Obsidian Knowledge Base
 Welcome to my Obsidian Knowledge Base! This guide is designed to help you access and explore my thoughts, as well as contribute if you'd like.
 
@@ -8,9 +24,8 @@ Welcome to my Obsidian Knowledge Base! This guide is designed to help you access
 2. **Open Obsidian**: Install and open Obsidian on your device.
 3. **Clone the Knowledge Base**:
     - Use GitHub Desktop or any Git client to clone the repository, or simply download the repository as a ZIP file from the GitHub page.
-	    - If using GitHub Desktop, select "Clone a repository" and enter the repository URL: `https://github.com/AlphaeusNg/ObsidianKB.git`.
-	    - If downloading as a ZIP, unzip the file to your desired location.
-      - ![Screenshot to show zipped file download button](https://github.com/user-attachments/assets/5e6587f3-4936-4d24-9e10-ea2d680cf0ac)
+    - If using GitHub Desktop, select "Clone a repository" and enter the repository URL: `https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git`.
+    - If downloading as a ZIP, unzip the file to your desired location.
 
 1. **Open in Obsidian**:
     - In Obsidian, click on "Open folder as vault" and select the cloned or unzipped folder.
@@ -22,11 +37,11 @@ Welcome to my Obsidian Knowledge Base! This guide is designed to help you access
 2. **Clone the Repository**:
     - Open your terminal or Git Bash.
     - Run the following command to clone the repository:      
-        `git clone https://github.com/AlphaeusNg/ObsidianKB.git`
+        `git clone https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git`
     - Navigate into the cloned directory:        
-        `cd ObsidianKB`
+        `cd Seeking-Biblical-Truth`
 3. **Create a New Branch**: Create a new branch for your changes.
-		`git checkout -b your-branch-name`
+    `git checkout -b your-branch-name`
 1. **Make Your Changes**: Add your notes or edits using Obsidian or your preferred text editor.
 2. **Commit and Push Your Changes**:
     - Add the changes to staging:        
