@@ -1,0 +1,12 @@
+# Python/cache output
+__pycache__/
+*.py[cod]
+
+# Obsidian volatile state
+.obsidian/workspace.json
+.obsidian/workspace*
+.obsidian/cache/
+.obsidian/trash/
+.obsidian/backup/
+.obsidian/log/
+*.obsidian.log

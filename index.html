@@ -1,184 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seeking Biblical Truth • Knowledge Base</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- html2canvas lightweight CDN for PNG export (coordinated with main portfolio) -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <style>
-        body { font-family: system-ui, sans-serif; }
-        .vault-header { font-family: Georgia, serif; }
-        .node { cursor: pointer; }
-        .link { stroke: #4B5563; stroke-opacity: 0.6; }
-        .node text { font-size: 11px; pointer-events: none; fill: #E5E7EB; }
-        .kg-btn { font-size: 10px; padding: 2px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); color: #CBD5E1; background: rgba(255,255,255,0.03); transition: all 0.1s ease; cursor: pointer; }
-        .kg-btn:hover { border-color: #C9A227; color: #C9A227; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seeking Biblical Truth - Vault Graph</title>
+  <meta name="description" content="Interactive public graph and note browser generated from the Seeking Biblical Truth Obsidian vault.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+    .vault-title { font-family: Georgia, serif; }
+    .graph-label { pointer-events: none; fill: #E5E7EB; font-size: 11px; paint-order: stroke; stroke: #0A0F1C; stroke-width: 3px; }
+    .note-body h1, .note-body h2, .note-body h3 { color: #F8FAFC; font-weight: 650; margin-top: 1rem; }
+    .note-body p { margin: .65rem 0; }
+    .note-body code { background: rgba(255,255,255,.08); padding: .1rem .3rem; border-radius: .35rem; }
+  </style>
 </head>
 <body class="bg-[#0A0F1C] text-[#F3F4F6]">
-    <div class="max-w-6xl mx-auto px-6 py-12">
-        <div class="flex justify-between items-start mb-10">
-            <div>
-                <div class="text-[#C9A227] text-sm tracking-[3px] mb-2">PERSONAL KNOWLEDGE BASE</div>
-                <h1 class="text-6xl tracking-tight vault-header">Seeking Biblical Truth</h1>
-                <p class="text-xl text-[#9CA3AF] mt-3 max-w-md">An open, living Obsidian vault for rigorous exploration of Scripture, doctrine, and truth.</p>
-            </div>
-            <div class="text-right text-sm">
-                <a href="https://github.com/AlphaeusNg/Seeking-Biblical-Truth" class="text-[#C9A227] hover:underline">View on GitHub →</a><br>
-                <span class="text-[#6B7280] text-xs">Clone for full Obsidian experience</span>
-                <!-- Featured badge: tight integration with main portfolio -->
-                <div class="mt-2">
-                    <a href="https://alphaeusng.github.io" target="_blank" 
-                       class="inline-block text-[10px] px-2.5 py-0.5 rounded-full border border-[#C9A227]/50 text-[#C9A227] hover:bg-[#C9A227] hover:text-[#0A0F1C] transition"
-                       title="This interactive slice is also embedded in the main portfolio case study">Featured on main portfolio ↗</a>
-                </div>
-            </div>
+  <main class="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">
+    <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <div class="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#C9A227]">Actual Obsidian Vault</div>
+        <h1 class="vault-title text-4xl tracking-tight md:text-6xl">Seeking Biblical Truth</h1>
+        <p id="vault-summary" class="mt-3 max-w-2xl text-sm leading-6 text-[#94A3B8]">Loading notes from the repository...</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <a href="https://github.com/AlphaeusNg/Seeking-Biblical-Truth" target="_blank" rel="noopener noreferrer" class="rounded-full border border-[#C9A227]/50 px-4 py-2 text-[#C9A227] hover:bg-[#C9A227] hover:text-[#0A0F1C]">GitHub repo</a>
+        <a id="open-vault" href="obsidian://open?vault=Seeking-Biblical-Truth" class="rounded-full border border-white/10 px-4 py-2 text-[#CBD5E1] hover:border-white/30 hover:text-white">Open Obsidian vault</a>
+        <a href="../" class="rounded-full border border-white/10 px-4 py-2 text-[#CBD5E1] hover:border-white/30 hover:text-white">Portfolio</a>
+      </div>
+    </header>
+
+    <section class="grid gap-4 lg:grid-cols-[270px_minmax(0,1fr)_360px]">
+      <aside class="rounded-2xl border border-white/10 bg-[#111827] p-4">
+        <label class="text-[10px] font-semibold uppercase tracking-[2px] text-[#64748B]" for="search">Search notes</label>
+        <input id="search" class="mt-2 w-full rounded-xl border border-white/10 bg-[#0A0F1C] px-3 py-2 text-sm text-white outline-none focus:border-[#C9A227]" placeholder="Baptism, Romans, Gospel...">
+        <div class="mt-4 flex gap-2">
+          <button id="fit" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-[#CBD5E1] hover:border-[#C9A227]">Fit</button>
+          <button id="reset" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-[#CBD5E1] hover:border-[#C9A227]">Reset</button>
+          <button id="export-png" class="rounded-full border border-[#C9A227]/50 px-3 py-1.5 text-xs text-[#C9A227] hover:bg-[#C9A227] hover:text-[#0A0F1C]">PNG</button>
         </div>
-
-        <!-- Interactive Knowledge Graph -->
-        <div class="mb-12">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl tracking-tight">Interactive Vault Graph</h2>
-                <div class="flex items-center gap-x-3 text-xs text-[#6B7280]">
-                    <span>Drag • Hover • Search</span>
-                    <button onclick="exportViewerPNG()" class="kg-btn" title="Export this graph view to PNG (dark theme)">Export PNG</button>
-                </div>
-            </div>
-            <div id="graph-container" class="bg-[#111827] border border-white/10 rounded-3xl overflow-hidden" style="height: 520px;"></div>
-            <div class="mt-2 text-[10px] text-[#6B7280]">Curated public slice. Full vault contains 20+ concepts across Scripture, Doctrine, Tooling, Vision &amp; Personal (Word of God, Journal, Heritage Christian University, Big Picture.canvas, bible_repo, Meaning of ideas/words...).</div>
+        <div class="mt-5">
+          <div class="mb-2 text-[10px] font-semibold uppercase tracking-[2px] text-[#64748B]">Folders</div>
+          <div id="folder-list" class="space-y-1 text-sm"></div>
         </div>
-
-        <div class="grid md:grid-cols-2 gap-8">
-            <div>
-                <h3 class="font-semibold text-lg mb-3 text-[#C9A227]">The Vision</h3>
-                <p class="text-[#9CA3AF]">This vault explores rigorous, communal truth-seeking. One of the core ideas is building better tools for theological dialogue — including community-driven “truth weight” metrics, better summarization, and rich linking/visualization (inspired by Obsidian canvases).</p>
-                
-                <div class="mt-6">
-                    <h4 class="font-medium mb-2">Key Concepts in the Graph</h4>
-                    <ul class="text-sm text-[#9CA3AF] space-y-1">
-                        <li>• Truth Weight &amp; Epistemic Humility</li>
-                        <li>• Logos &amp; rigorous reasoning</li>
-                        <li>• Christian Discussion App prototype ideas</li>
-                        <li>• Deep study of COC doctrine &amp; salvation</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="bg-[#111827] border border-white/10 rounded-3xl p-8">
-                <h3 class="font-semibold mb-4">How to Explore</h3>
-                <ol class="text-sm space-y-3 text-[#9CA3AF]">
-                    <li>1. Clone the repo: <code class="text-xs bg-black/50 px-1.5 py-0.5 rounded">git clone https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git</code></li>
-                    <li>2. Open the folder in Obsidian</li>
-                    <li>3. Use the graph view + canvases (especially Big Picture.canvas)</li>
-                    <li>4. Explore the web tools in <code>webapp.py</code> and <code>webapp_v2_grok.py</code></li>
-                </ol>
-                <p class="text-xs mt-6 text-[#6B7280]">This public viewer contains a curated slice of the graph for quick exploration. The full vault has significantly more notes and connections. The same aesthetic powers the interactive graph in the main portfolio.</p>
-            </div>
+        <div class="mt-5 rounded-xl border border-white/10 bg-black/20 p-3 text-xs leading-5 text-[#94A3B8]">
+          Drag nodes. Scroll or pinch to zoom. Click a note to preview it. Folder nodes mirror Obsidian graph grouping; note links come from real Markdown and canvas references.
         </div>
-    </div>
+      </aside>
 
-    <script>
-        // Lightweight D3 Knowledge Graph (curated slice)
-        const data = {
-            nodes: [
-                {id: "bible", label: "Bible", group: "scripture"},
-                {id: "truth_weight", label: "Truth Weight", group: "doctrine"},
-                {id: "salvation", label: "Salvation", group: "doctrine"},
-                {id: "epistemic", label: "Epistemic Humility", group: "personal"},
-                {id: "discussion_app", label: "Christian Discussion App", group: "vision"},
-                {id: "obsidian", label: "Obsidian Vault", group: "tooling"},
-                {id: "logos", label: "Logos", group: "scripture"},
-                {id: "annotations", label: "Annotation Pipelines", group: "tooling"},
-                {id: "big_picture", label: "Big Picture Canvas", group: "vision"}
-            ],
-            links: [
-                {source: "bible", target: "salvation"},
-                {source: "truth_weight", target: "salvation"},
-                {source: "truth_weight", target: "epistemic"},
-                {source: "truth_weight", target: "discussion_app"},
-                {source: "discussion_app", target: "bible"},
-                {source: "epistemic", target: "logos"},
-                {source: "obsidian", target: "big_picture"},
-                {source: "annotations", target: "obsidian"}
-            ]
-        };
+      <section class="overflow-hidden rounded-2xl border border-white/10 bg-[#111827]">
+        <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
+          <div class="text-sm font-medium text-[#CBD5E1]">Interactive graph</div>
+          <div id="graph-count" class="text-xs text-[#64748B]"></div>
+        </div>
+        <div id="graph" class="h-[68vh] min-h-[520px] bg-[#0A0F1C]" style="height:68vh;min-height:520px;"></div>
+      </section>
 
-        const container = document.getElementById('graph-container');
-        const width = container.clientWidth;
-        const height = 520;
+      <aside class="rounded-2xl border border-white/10 bg-[#111827] p-5">
+        <div id="note-panel">
+          <div class="text-[10px] font-semibold uppercase tracking-[2px] text-[#64748B]">Selected note</div>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Choose a node</h2>
+          <p class="mt-3 text-sm leading-6 text-[#94A3B8]">The note body, backlinks, outgoing links, and Obsidian deep link will appear here.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
 
-        const svg = d3.select("#graph-container").append("svg")
-            .attr("width", width)
-            .attr("height", height);
+  <script>
+    const state = { data: null, selected: null, filter: 'all', simulation: null, zoom: null, graphLayer: null };
+    const color = d3.scaleOrdinal()
+      .domain(['Word of God', 'Heritage Christian University', 'Meaning of ideas, words', 'Journal', 'Root', 'Canvas'])
+      .range(['#5B9BD5', '#C9A227', '#9F7AEA', '#E07A7A', '#CBD5E1', '#4CAF8A']);
 
-        const simulation = d3.forceSimulation(data.nodes)
-            .force("link", d3.forceLink(data.links).id(d => d.id).distance(90))
-            .force("charge", d3.forceManyBody().strength(-280))
-            .force("center", d3.forceCenter(width / 2, height / 2));
+    const esc = (s = '') => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    const md = (text = '') => esc(text)
+      .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+      .replace(/\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|([^\]]+))?\]\]/g, '<span class="text-[#C9A227]">$2$1</span>')
+      .replace(/\n{2,}/g, '</p><p>')
+      .replace(/\n/g, '<br>');
 
-        const link = svg.append("g").selectAll("line").data(data.links).join("line")
-            .attr("stroke", "#4B5563")
-            .attr("stroke-width", 1.5);
+    function radius(d) {
+      if (d.type === 'folder') return 16;
+      if (d.type === 'canvas') return 13;
+      return Math.max(7, Math.min(14, 6 + Math.sqrt(d.wordCount || 1) / 8));
+    }
 
-        const node = svg.append("g").selectAll("g").data(data.nodes).join("g")
-            .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+    function visibleNode(d) {
+      const term = document.getElementById('search').value.trim().toLowerCase();
+      const matchesText = !term || [d.title, d.path, d.excerpt, d.content].join(' ').toLowerCase().includes(term);
+      const matchesFolder = state.filter === 'all' || d.group === state.filter || d.id === `folder::${state.filter}`;
+      return matchesText && matchesFolder;
+    }
 
-        node.append("circle")
-            .attr("r", d => d.group === "doctrine" ? 11 : 8)
-            .attr("fill", d => {
-                if (d.group === "scripture") return "#5B9BD5";
-                if (d.group === "doctrine") return "#C9A227";
-                if (d.group === "vision") return "#9F7AEA";
-                if (d.group === "tooling") return "#4CAF8A";
-                return "#E07A7A";
-            });
+    function renderFolders() {
+      const host = document.getElementById('folder-list');
+      host.innerHTML = '';
+      ['all', ...state.data.folders].forEach(folder => {
+        const btn = document.createElement('button');
+        btn.className = `block w-full rounded-lg px-3 py-2 text-left text-sm ${state.filter === folder ? 'bg-[#C9A227] text-[#0A0F1C]' : 'text-[#CBD5E1] hover:bg-white/5'}`;
+        btn.textContent = folder === 'all' ? 'All notes' : folder;
+        btn.addEventListener('click', () => { state.filter = folder; renderFolders(); applyVisibility(); });
+        host.appendChild(btn);
+      });
+    }
 
-        node.append("text")
-            .text(d => d.label)
-            .attr("x", 14)
-            .attr("y", 4)
-            .attr("fill", "#E5E7EB")
-            .attr("font-size", "11px");
+    function renderGraph() {
+      const container = document.getElementById('graph');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      container.innerHTML = '';
 
-        simulation.on("tick", () => {
-            link
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
+      const svg = d3.select(container).append('svg').attr('width', width).attr('height', height);
+      const layer = svg.append('g');
+      state.graphLayer = layer;
+      state.zoom = d3.zoom().scaleExtent([0.18, 5]).on('zoom', e => layer.attr('transform', e.transform));
+      svg.call(state.zoom);
 
-            node.attr("transform", d => `translate(${d.x},${d.y})`);
+      const links = state.data.links.map(d => ({ ...d }));
+      const nodes = state.data.nodes.map(d => ({ ...d }));
+      const link = layer.append('g').attr('stroke', '#4B5563').attr('stroke-opacity', .45).selectAll('line').data(links).join('line')
+        .attr('stroke-width', d => d.type === 'contains' ? .7 : 1.6);
+      const node = layer.append('g').selectAll('g').data(nodes).join('g').attr('class', 'node').on('click', (_, d) => selectNode(d))
+        .call(d3.drag().on('start', dragStart).on('drag', dragged).on('end', dragEnd));
+      node.append('circle').attr('r', radius).attr('fill', d => d.type === 'folder' ? '#0A0F1C' : color(d.group)).attr('stroke', d => d.type === 'folder' ? color(d.group) : '#0A0F1C').attr('stroke-width', 2);
+      node.append('text').attr('class', 'graph-label').attr('x', d => radius(d) + 5).attr('y', 4).text(d => d.title.length > 34 ? `${d.title.slice(0, 32)}...` : d.title);
+
+      state.simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(d => d.type === 'contains' ? 90 : 135).strength(d => d.type === 'contains' ? .18 : .45))
+        .force('charge', d3.forceManyBody().strength(d => d.type === 'folder' ? -560 : -220))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(d => radius(d) + 20))
+        .on('tick', () => {
+          link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+          node.attr('transform', d => `translate(${d.x},${d.y})`);
         });
+      state.link = link;
+      state.node = node;
+      applyVisibility();
+      setTimeout(fitGraph, 450);
+    }
 
-        function dragstarted(event, d) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x; d.fy = d.y;
-        }
-        function dragged(event, d) {
-            d.fx = event.x; d.fy = event.y;
-        }
-        function dragended(event, d) {
-            if (!event.active) simulation.alphaTarget(0);
-            d.fx = null; d.fy = null;
-        }
+    function applyVisibility() {
+      if (!state.node) return;
+      const visible = new Set();
+      state.node.each(d => { if (visibleNode(d)) visible.add(d.id); });
+      state.node.style('opacity', d => visible.has(d.id) ? 1 : .08);
+      state.link.style('opacity', d => visible.has(d.source.id || d.source) && visible.has(d.target.id || d.target) ? .5 : .04);
+      document.getElementById('graph-count').textContent = `${visible.size} visible / ${state.data.counts.nodes} nodes`;
+    }
 
-        // PNG export for dedicated viewer (lightweight, matches portfolio aesthetic)
-        function exportViewerPNG() {
-            const el = document.getElementById('graph-container');
-            if (!el || typeof html2canvas === 'undefined') { alert('Reload to enable PNG export.'); return; }
-            html2canvas(el, { backgroundColor: '#0A0F1C', scale: 2 }).then(c => {
-                const a = document.createElement('a');
-                a.download = 'seeking-biblical-truth-viewer.png';
-                a.href = c.toDataURL('image/png');
-                a.click();
-            });
-        }
+    function selectNode(d) {
+      state.selected = d;
+      const outgoing = state.data.links.filter(l => l.source === d.id || (l.source.id === d.id)).map(l => l.target.id || l.target);
+      const incoming = state.data.links.filter(l => l.target === d.id || (l.target.id === d.id)).map(l => l.source.id || l.source);
+      const byId = Object.fromEntries(state.data.nodes.map(n => [n.id, n]));
+      const relatedList = ids => ids.filter(id => byId[id] && byId[id].type !== 'folder').slice(0, 12).map(id => `<button class="block text-left text-[#C9A227] hover:underline" data-node="${esc(id)}">${esc(byId[id].title)}</button>`).join('') || '<span class="text-[#64748B]">None</span>';
+      document.getElementById('note-panel').innerHTML = `
+        <div class="text-[10px] font-semibold uppercase tracking-[2px] text-[#64748B]">${esc(d.group)} / ${esc(d.type)}</div>
+        <h2 class="mt-2 text-2xl font-semibold tracking-tight">${esc(d.title)}</h2>
+        <p class="mt-2 text-xs text-[#64748B]">${esc(d.path || d.id)}</p>
+        <div class="mt-4 flex flex-wrap gap-2 text-xs">
+          ${d.obsidianUri ? `<a href="${d.obsidianUri}" class="rounded-full border border-[#C9A227]/50 px-3 py-1.5 text-[#C9A227] hover:bg-[#C9A227] hover:text-[#0A0F1C]">Open this note in Obsidian</a>` : ''}
+          ${d.path ? `<a href="https://github.com/AlphaeusNg/Seeking-Biblical-Truth/blob/main/${encodeURI(d.path)}" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/10 px-3 py-1.5 text-[#CBD5E1] hover:text-white">View source</a>` : ''}
+        </div>
+        <div class="note-body mt-5 max-h-[44vh] overflow-auto rounded-xl border border-white/10 bg-[#0A0F1C] p-4 text-sm leading-6 text-[#CBD5E1]"><p>${md(d.content || d.excerpt || '')}</p></div>
+        <div class="mt-5 grid grid-cols-2 gap-4 text-sm">
+          <div><div class="mb-2 text-[10px] uppercase tracking-[2px] text-[#64748B]">Outgoing</div>${relatedList(outgoing)}</div>
+          <div><div class="mb-2 text-[10px] uppercase tracking-[2px] text-[#64748B]">Backlinks</div>${relatedList(incoming)}</div>
+        </div>`;
+      document.querySelectorAll('[data-node]').forEach(btn => btn.addEventListener('click', () => selectNode(byId[btn.dataset.node])));
+    }
 
-        // Optional: basic keyboard search hint (kept minimal)
-        console.log('%c[Seeking Biblical Truth viewer] PNG export + portfolio badge added for graph maturation.', 'color:#475569;font-size:9px');
-    </script>
+    function fitGraph() {
+      if (!state.node || !state.zoom) return;
+      const graph = document.getElementById('graph');
+      const bounds = state.graphLayer.node().getBBox();
+      const scale = Math.max(.18, Math.min(2.2, .9 / Math.max(bounds.width / graph.clientWidth, bounds.height / graph.clientHeight)));
+      const tx = graph.clientWidth / 2 - scale * (bounds.x + bounds.width / 2);
+      const ty = graph.clientHeight / 2 - scale * (bounds.y + bounds.height / 2);
+      d3.select('#graph svg').transition().duration(450).call(state.zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+    }
+    function resetGraph() { d3.select('#graph svg').transition().duration(300).call(state.zoom.transform, d3.zoomIdentity); state.simulation.alpha(.7).restart(); }
+    function dragStart(e, d) { if (!e.active) state.simulation.alphaTarget(.25).restart(); d.fx = d.x; d.fy = d.y; }
+    function dragged(e, d) { d.fx = e.x; d.fy = e.y; }
+    function dragEnd(e, d) { if (!e.active) state.simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+
+    document.getElementById('search').addEventListener('input', applyVisibility);
+    document.getElementById('fit').addEventListener('click', fitGraph);
+    document.getElementById('reset').addEventListener('click', resetGraph);
+    document.getElementById('export-png').addEventListener('click', () => html2canvas(document.getElementById('graph'), { backgroundColor: '#0A0F1C', scale: 2 }).then(canvas => {
+      const a = document.createElement('a'); a.download = 'seeking-biblical-truth-graph.png'; a.href = canvas.toDataURL('image/png'); a.click();
+    }));
+    window.addEventListener('resize', () => { clearTimeout(window.__graphResize); window.__graphResize = setTimeout(renderGraph, 180); });
+
+    fetch('vault-data.json').then(r => r.json()).then(data => {
+      state.data = data;
+      document.getElementById('vault-summary').textContent = `${data.counts.notes} Markdown notes, ${data.counts.canvas} canvas, and ${data.counts.links} links generated from the live repository structure.`;
+      renderFolders();
+      renderGraph();
+      const first = data.nodes.find(n => n.path === 'My Search for Truth.md') || data.nodes.find(n => n.type === 'note');
+      if (first) selectNode(first);
+    }).catch(err => {
+      document.getElementById('vault-summary').textContent = `Could not load vault-data.json: ${err.message}`;
+    });
+  </script>
 </body>
 </html>
