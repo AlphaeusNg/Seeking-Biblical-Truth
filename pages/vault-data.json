@@ -1,12 +1,33 @@
 {
   "generatedFrom": "https://github.com/AlphaeusNg/Seeking-Biblical-Truth",
   "counts": {
-    "notes": 56,
+    "notes": 57,
     "canvas": 1,
-    "nodes": 63,
-    "links": 100
+    "nodes": 64,
+    "links": 101
   },
   "nodes": [
+    {
+      "id": "AGENTS.md",
+      "path": "AGENTS.md",
+      "title": "AGENTS",
+      "type": "note",
+      "group": "Root",
+      "excerpt": "AGENTS.md — Seeking Biblical Truth Repo: https://github.com/AlphaeusNg/Seeking Biblical Truth Local: /home/alph/projects/Seeking Biblical Truth Hub: /home/alph/projects/AGENTS.md Public viewer: https://alphaeusng.github.io/pages/seeking biblical truth/ Viewer lives in: /home/alph/projects/alphaeusng.github.io/pages/seeking biblical truth/ Purpose Obsidian or",
+      "content": "# AGENTS.md — Seeking-Biblical-Truth\n\n**Repo:** https://github.com/AlphaeusNg/Seeking-Biblical-Truth  \n**Local:** `/home/alph/projects/Seeking-Biblical-Truth`  \n**Hub:** `/home/alph/projects/AGENTS.md`  \n**Public viewer:** https://alphaeusng.github.io/pages/seeking-biblical-truth/  \n**Viewer lives in:** `/home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/`\n\n## Purpose\n\nObsidian-oriented **Scripture study vault**: notes, topics, journal, canvas overview. Export tooling builds `vault-data.json` for the portfolio graph/list viewer.\n\n## Structure\n\n```text\nWord of God/                 # Primary notes (Topics, OT, NT, …)\nHeritage Christian University/\nJournal/\nMeaning of ideas, words/\nMy Search for Truth.md\nBig Picture.canvas           # Graph source for export\npages/\n  index.html                 # Optional local viewer shell\n  vault-data.json            # Generated — do not hand-edit casually\ntools/\n  generate_vault_data.py     # Export Markdown + canvas → vault-data.json\n.obsidian/                   # Editor config (repo may track some of it)\n```\n\n## Content vs viewer split\n\n| Concern | Repo |\n|---|---|\n| Notes, theology content, canvas | **This repo** |\n| Public interactive viewer UI (D3/list, Firebase editor if any) | **alphaeusng.github.io** `pages/seeking-biblical-truth/` |\n| Verse *memory games* | **VerseKeep** (different product) |\n\n## Commands\n\n```bash\ncd /home/alph/projects/Seeking-Biblical-Truth\n\n# Rebuild export\npython3 tools/generate_vault_data.py\n\n# Sync into portfolio for GitHub Pages\ncp pages/vault-data.json \\\n  /home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json\n\n# Optional local vault viewer\npython3 -m http.server 8001\n# open http://127.0.0.1:8001/pages/\n```\n\n## Conventions\n\n- Prefer clear Markdown; keep wiki-links/obsidian conventions consistent with existing notes.\n- After substantive note or canvas changes, **regenerate and sync** `vault-data.json` to the portfolio (two repos → two commits if both should ship).\n- Don’t put private pastoral counseling notes here unless intended to be public via export.\n- Python tooling: `snake_case`, 4-space indent; run `python3 -m compileall tools` after script edits.\n\n## Deploy\n\n1. Commit vault content (+ regenerated `pages/vault-data.json` if tracked).\n2. Push this repo.\n3. In portfolio repo, commit synced `vault-data.json` (and viewer code if changed); push `main` for Pages.\n\n## Agent checklist\n\n1. Decide content-only vs viewer-UI vs both.\n2. Edit notes under this tree; run generator.\n3. Copy JSON to portfolio if the public site should update.\n4. Validate viewer load on portfolio local server.\n",
+      "headings": [
+        "AGENTS.md — Seeking-Biblical-Truth",
+        "Purpose",
+        "Structure",
+        "Content vs viewer split",
+        "Commands",
+        "Rebuild export",
+        "Sync into portfolio for GitHub Pages",
+        "Optional local vault viewer"
+      ],
+      "wordCount": 364,
+      "obsidianUri": "obsidian://open?vault=Seeking-Biblical-Truth&file=AGENTS.md"
+    },
     {
       "id": "Heritage Christian University/Biblical Preaching/My background.md",
       "path": "Heritage Christian University/Biblical Preaching/My background.md",
@@ -107,7 +128,7 @@
       "type": "note",
       "group": "Root",
       "excerpt": "Seeking Biblical Truth An Obsidian vault for rigorous exploration of Scripture, doctrine, truth seeking, and Christian reasoning. Original Intent Welcome to my Obsidian Knowledge Base. This guide exists to help people access and explore my thoughts, and contribute if they want to. The deeper idea is a Christian discussion and study environment where the main",
-      "content": "# Seeking Biblical Truth\n\nAn Obsidian vault for rigorous exploration of Scripture, doctrine, truth-seeking, and Christian reasoning.\n\n## Original Intent\n\nWelcome to my Obsidian Knowledge Base. This guide exists to help people access and explore my thoughts, and contribute if they want to.\n\nThe deeper idea is a Christian discussion and study environment where the main goal is **an open search for the closest Biblical truth**.\n\nImportant ideas from the original README:\n\n- Use Obsidian to browse the vault as an interconnected knowledge base.\n- Make everything easy to link to everything else.\n- Build toward better tools for theological dialogue.\n- Explore a robust “truth weight” metric for claims, likely determined by community and similar in spirit to Community Notes.\n- Make it easy for laypeople and scholars to contribute or refute ongoing discussions.\n- Summarize long chains of discussion accurately.\n- Preserve graph-style visualization, while improving on Obsidian’s limitations around nested ideas such as books, chapters, and verses.\n\n## Repository Structure\n\n- `Word of God/`: Scripture notes and topical studies.\n- `Heritage Christian University/`: coursework and study notes.\n- `Meaning of ideas, words/`: definitions and concept notes.\n- `Journal/`: journal notes.\n- `Big Picture.canvas`: Obsidian canvas used by the graph generator.\n- `.obsidian/`: Obsidian settings and selected plugins for the full local vault experience.\n- `pages/`: public static viewer for GitHub Pages.\n  - `pages/index.html`: interactive graph and note browser.\n  - `pages/vault-data.json`: generated graph data from the real notes.\n- `tools/`: maintenance scripts.\n  - `tools/generate_vault_data.py`: regenerates the public viewer dataset from Markdown and canvas files.\n- `index.html`: compatibility redirect to `pages/`.\n\n## View In Obsidian\n\n1. Install Obsidian: https://obsidian.md/download\n2. Clone this repository:\n\n```bash\ngit clone https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git\ncd Seeking-Biblical-Truth\n```\n\n3. In Obsidian, choose **Open folder as vault** and select this folder.\n4. Use Obsidian graph view, canvases, backlinks, and installed vault plugins for the full experience.\n\nThe public web viewer includes `obsidian://open?vault=Seeking-Biblical-Truth` links. Those links work after this folder is opened as an Obsidian vault with the matching vault name.\n\n## Public Viewer\n\nRun locally:\n\n```bash\npython3 -m http.server 8001\n```\n\nOpen:\n\n```text\nhttp://127.0.0.1:8001/pages/\n```\n\nRegenerate graph data after changing notes:\n\n```bash\npython3 tools/generate_vault_data.py\n```\n\n## Contributing\n\n```bash\ngit checkout -b your-branch-name\ngit add .\ngit commit -m \"Describe your changes\"\ngit push origin your-branch-name\n```\n\nThen open a pull request on GitHub.\n\n## For Future Agents\n\n- Treat this repo primarily as an Obsidian vault, not as an app codebase.\n- Keep notes and canvases in content folders, not in `pages/` or `tools/`.\n- Put maintenance scripts in `tools/`.\n- Keep public web files in `pages/`.\n- Do not commit API keys, private local paths, generated caches, or broken prototypes.\n- Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.\n- After editing notes, run `python3 tools/generate_vault_data.py` and validate that `pages/vault-data.json` parses.\n- If the portfolio repo also needs the updated viewer data, copy `pages/vault-data.json` into `/home/alph/codex/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json`.\n",
+      "content": "# Seeking Biblical Truth\n\nAn Obsidian vault for rigorous exploration of Scripture, doctrine, truth-seeking, and Christian reasoning.\n\n## Original Intent\n\nWelcome to my Obsidian Knowledge Base. This guide exists to help people access and explore my thoughts, and contribute if they want to.\n\nThe deeper idea is a Christian discussion and study environment where the main goal is **an open search for the closest Biblical truth**.\n\nImportant ideas from the original README:\n\n- Use Obsidian to browse the vault as an interconnected knowledge base.\n- Make everything easy to link to everything else.\n- Build toward better tools for theological dialogue.\n- Explore a robust “truth weight” metric for claims, likely determined by community and similar in spirit to Community Notes.\n- Make it easy for laypeople and scholars to contribute or refute ongoing discussions.\n- Summarize long chains of discussion accurately.\n- Preserve graph-style visualization, while improving on Obsidian’s limitations around nested ideas such as books, chapters, and verses.\n\n## Repository Structure\n\n- `Word of God/`: Scripture notes and topical studies.\n- `Heritage Christian University/`: coursework and study notes.\n- `Meaning of ideas, words/`: definitions and concept notes.\n- `Journal/`: journal notes.\n- `Big Picture.canvas`: Obsidian canvas used by the graph generator.\n- `.obsidian/`: Obsidian settings and selected plugins for the full local vault experience.\n- `pages/`: public static viewer for GitHub Pages.\n  - `pages/index.html`: interactive graph and note browser.\n  - `pages/vault-data.json`: generated graph data from the real notes.\n- `tools/`: maintenance scripts.\n  - `tools/generate_vault_data.py`: regenerates the public viewer dataset from Markdown and canvas files.\n- `index.html`: compatibility redirect to `pages/`.\n\n## View In Obsidian\n\n1. Install Obsidian: https://obsidian.md/download\n2. Clone this repository:\n\n```bash\ngit clone https://github.com/AlphaeusNg/Seeking-Biblical-Truth.git\ncd Seeking-Biblical-Truth\n```\n\n3. In Obsidian, choose **Open folder as vault** and select this folder.\n4. Use Obsidian graph view, canvases, backlinks, and installed vault plugins for the full experience.\n\nThe public web viewer includes `obsidian://open?vault=Seeking-Biblical-Truth` links. Those links work after this folder is opened as an Obsidian vault with the matching vault name.\n\n## Public Viewer\n\nRun locally:\n\n```bash\npython3 -m http.server 8001\n```\n\nOpen:\n\n```text\nhttp://127.0.0.1:8001/pages/\n```\n\nThe public viewer defaults to rendered Markdown note previews and lets users toggle to the raw `.md` source. Internal wiki links, regular Markdown links, backlinks, and Obsidian deep links are all preserved where possible in the static web view.\n\nRegenerate graph data after changing notes:\n\n```bash\npython3 tools/generate_vault_data.py\n```\n\n## Contributing\n\n```bash\ngit checkout -b your-branch-name\ngit add .\ngit commit -m \"Describe your changes\"\ngit push origin your-branch-name\n```\n\nThen open a pull request on GitHub.\n\n## For Future Agents\n\n- Treat this repo primarily as an Obsidian vault, not as an app codebase.\n- Keep notes and canvases in content folders, not in `pages/` or `tools/`.\n- Put maintenance scripts in `tools/`.\n- Keep public web files in `pages/`.\n- Preserve the rendered/raw note toggle in the public viewer unless there is a stronger replacement.\n- Do not commit API keys, private local paths, generated caches, or broken prototypes.\n- Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.\n- After editing notes, run `python3 tools/generate_vault_data.py` and validate that `pages/vault-data.json` parses.\n- If the portfolio repo also needs the updated viewer data, copy `pages/vault-data.json` into `/home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json`.\n",
       "headings": [
         "Seeking Biblical Truth",
         "Original Intent",
@@ -117,7 +138,7 @@
         "Contributing",
         "For Future Agents"
       ],
-      "wordCount": 509,
+      "wordCount": 564,
       "obsidianUri": "obsidian://open?vault=Seeking-Biblical-Truth&file=README.md"
     },
     {
@@ -1062,6 +1083,11 @@
       "source": "Big Picture.canvas",
       "target": "Word of God/1. Topics/Baptism.md",
       "type": "canvas"
+    },
+    {
+      "source": "folder::Root",
+      "target": "AGENTS.md",
+      "type": "contains"
     },
     {
       "source": "folder::Heritage Christian University",

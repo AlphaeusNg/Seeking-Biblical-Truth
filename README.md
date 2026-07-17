@@ -91,4 +91,4 @@ Then open a pull request on GitHub.
 - Do not commit API keys, private local paths, generated caches, or broken prototypes.
 - Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.
 - After editing notes, run `python3 tools/generate_vault_data.py` and validate that `pages/vault-data.json` parses.
-- If the portfolio repo also needs the updated viewer data, copy `pages/vault-data.json` into `/home/alph/codex/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json`.
+- If the portfolio repo also needs the updated viewer data, copy `pages/vault-data.json` into `/home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json`.
