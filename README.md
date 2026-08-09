@@ -82,6 +82,10 @@ python3 -m compileall -q tools
 The same lossless-export, link-integrity, freshness, and Python checks run in
 least-privilege GitHub Actions on every `main` push and pull request.
 
+The generated `linkDiagnostics` section reports missing and ambiguous wiki-link
+references without failing the export. Repeated equivalent references in one
+note are collapsed, while ambiguous entries list every candidate path.
+
 ## Contributing
 
 ```bash

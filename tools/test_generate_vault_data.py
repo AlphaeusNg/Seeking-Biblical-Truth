@@ -13,6 +13,45 @@ DATA_PATH = ROOT / "pages" / "vault-data.json"
 
 
 class VaultDatasetTests(unittest.TestCase):
+    def test_reports_deduplicated_missing_and_ambiguous_wikilinks(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for folder in ("A", "B"):
+                note = root / folder / "Grace.md"
+                note.parent.mkdir()
+                note.write_text(f"# {folder} Grace\n", encoding="utf-8")
+            (root / "Index.md").write_text(
+                "[[Missing Note]]\n"
+                "[[Missing%20Note|same missing note]]\n"
+                "[[Grace]]\n",
+                encoding="utf-8",
+            )
+
+            data = build_dataset(root)
+
+            self.assertEqual(data["counts"]["unresolvedLinks"], 1)
+            self.assertEqual(data["counts"]["ambiguousLinks"], 1)
+            self.assertEqual(
+                data["linkDiagnostics"],
+                {
+                    "unresolved": [
+                        {
+                            "source": "Index.md",
+                            "reference": "Missing Note",
+                            "type": "wikilink",
+                        }
+                    ],
+                    "ambiguous": [
+                        {
+                            "source": "Index.md",
+                            "reference": "Grace",
+                            "type": "wikilink",
+                            "candidates": ["A/Grace.md", "B/Grace.md"],
+                        }
+                    ],
+                },
+            )
+
     def test_resolves_vault_root_wikilink_paths_with_optional_extension(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -119,9 +158,22 @@ class VaultDatasetTests(unittest.TestCase):
         self.assertEqual(len(ids), len(set(ids)))
         self.assertEqual(data["counts"]["nodes"], len(data["nodes"]))
         self.assertEqual(data["counts"]["links"], len(data["links"]))
+        self.assertEqual(
+            data["counts"]["unresolvedLinks"],
+            len(data["linkDiagnostics"]["unresolved"]),
+        )
+        self.assertEqual(
+            data["counts"]["ambiguousLinks"],
+            len(data["linkDiagnostics"]["ambiguous"]),
+        )
         for link in data["links"]:
             self.assertIn(link["source"], ids)
             self.assertIn(link["target"], ids)
+        for diagnostic in (
+            data["linkDiagnostics"]["unresolved"]
+            + data["linkDiagnostics"]["ambiguous"]
+        ):
+            self.assertIn(diagnostic["source"], ids)
 
 
 if __name__ == "__main__":

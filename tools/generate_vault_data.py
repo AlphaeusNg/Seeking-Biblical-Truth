@@ -59,16 +59,20 @@ def build_dataset(root: Path) -> dict:
         by_title.setdefault(path.stem.casefold(), []).append(relative)
         by_path[note_reference_key(relative)] = relative
 
-    def resolve_wikilink(target_text: str) -> str | None:
+    def resolve_wikilink(target_text: str) -> tuple[str | None, list[str]]:
         key = note_reference_key(target_text)
         if "/" in key:
-            return by_path.get(key)
+            target = by_path.get(key)
+            return target, [target] if target else []
         matches = by_title.get(key, [])
-        return matches[0] if len(matches) == 1 else None
+        return (matches[0] if len(matches) == 1 else None), matches
 
     nodes: list[dict] = []
     links: list[dict] = []
     seen_links: set[tuple[str, str, str]] = set()
+    unresolved_links: list[dict] = []
+    ambiguous_links: list[dict] = []
+    seen_diagnostics: set[tuple[str, str, str]] = set()
 
     for path in md_files:
         relative = rel(path, root)
@@ -90,12 +94,28 @@ def build_dataset(root: Path) -> dict:
         )
 
         for target_text in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?]]", text):
-            target = resolve_wikilink(target_text)
+            target, candidates = resolve_wikilink(target_text)
             if target and target != relative:
                 key = (relative, target, "wikilink")
                 if key not in seen_links:
                     links.append({"source": relative, "target": target, "type": "wikilink"})
                     seen_links.add(key)
+            elif not target:
+                kind = "ambiguous" if candidates else "unresolved"
+                diagnostic_key = (relative, note_reference_key(target_text), kind)
+                if diagnostic_key in seen_diagnostics:
+                    continue
+                diagnostic = {
+                    "source": relative,
+                    "reference": unquote(target_text).strip(),
+                    "type": "wikilink",
+                }
+                if candidates:
+                    diagnostic["candidates"] = candidates
+                    ambiguous_links.append(diagnostic)
+                else:
+                    unresolved_links.append(diagnostic)
+                seen_diagnostics.add(diagnostic_key)
 
         for target_text in re.findall(r"\[[^\]]+]\(([^)]+\.md)(?:#[^)]*)?\)", text):
             target_path = (path.parent / target_text.replace("%20", " ")).resolve()
@@ -166,10 +186,16 @@ def build_dataset(root: Path) -> dict:
             "canvas": len(canvas_files),
             "nodes": len(nodes),
             "links": len(links),
+            "unresolvedLinks": len(unresolved_links),
+            "ambiguousLinks": len(ambiguous_links),
         },
         "nodes": nodes,
         "links": links,
         "folders": groups,
+        "linkDiagnostics": {
+            "unresolved": unresolved_links,
+            "ambiguous": ambiguous_links,
+        },
     }
 
 
