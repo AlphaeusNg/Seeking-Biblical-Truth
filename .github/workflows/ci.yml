@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test vault exporter
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+      - name: Verify committed export is fresh
+        run: |
+          python3 tools/generate_vault_data.py --output /tmp/vault-data.json
+          cmp pages/vault-data.json /tmp/vault-data.json
+      - name: Compile Python tools
+        run: python3 -m compileall -q tools

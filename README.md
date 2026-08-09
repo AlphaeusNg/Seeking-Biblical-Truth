@@ -70,6 +70,18 @@ Regenerate graph data after changing notes:
 python3 tools/generate_vault_data.py
 ```
 
+Validate the exporter and confirm the committed dataset is current:
+
+```bash
+python3 -m unittest discover -s tools -p 'test_*.py'
+python3 tools/generate_vault_data.py --output /tmp/vault-data.json
+cmp pages/vault-data.json /tmp/vault-data.json
+python3 -m compileall -q tools
+```
+
+The same lossless-export, link-integrity, freshness, and Python checks run in
+least-privilege GitHub Actions on every `main` push and pull request.
+
 ## Contributing
 
 ```bash

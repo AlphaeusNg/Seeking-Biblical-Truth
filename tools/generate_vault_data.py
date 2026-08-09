@@ -11,6 +11,7 @@ from urllib.parse import quote
 
 
 EXCLUDED_PARTS = {".git", "__pycache__", "pages", "tools"}
+EXCLUDED_ROOT_FILES = {"AGENTS.md", "PROGRESS.md", "README.md"}
 
 
 def rel(path: Path, root: Path) -> str:
@@ -32,7 +33,10 @@ def excerpt(text: str) -> str:
 
 
 def is_content_file(path: Path) -> bool:
-    return not any(part in EXCLUDED_PARTS for part in path.parts)
+    return (
+        path.as_posix() not in EXCLUDED_ROOT_FILES
+        and not any(part in EXCLUDED_PARTS for part in path.parts)
+    )
 
 
 def build_dataset(root: Path) -> dict:
@@ -62,7 +66,7 @@ def build_dataset(root: Path) -> dict:
                 "type": "note",
                 "group": folder_for(path, root),
                 "excerpt": excerpt(text),
-                "content": text[:7000],
+                "content": text,
                 "headings": [heading.strip() for _, heading in headings[:8]],
                 "wordCount": len(re.findall(r"\w+", text)),
                 "obsidianUri": "obsidian://open?vault=Seeking-Biblical-Truth&file=" + quote(relative),
@@ -94,8 +98,8 @@ def build_dataset(root: Path) -> dict:
         text = path.read_text(encoding="utf-8", errors="ignore")
         try:
             canvas = json.loads(text)
-        except json.JSONDecodeError:
-            continue
+        except json.JSONDecodeError as error:
+            raise ValueError(f"Invalid canvas JSON: {relative}") from error
         nodes.append(
             {
                 "id": relative,
@@ -104,7 +108,7 @@ def build_dataset(root: Path) -> dict:
                 "type": "canvas",
                 "group": "Canvas",
                 "excerpt": f"Canvas with {len(canvas.get('nodes', []))} nodes and {len(canvas.get('edges', []))} edges.",
-                "content": text[:7000],
+                "content": text,
                 "headings": [],
                 "wordCount": 0,
                 "obsidianUri": "obsidian://open?vault=Seeking-Biblical-Truth&file=" + quote(relative),
