@@ -204,13 +204,57 @@ def serialize_dataset(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
+def format_link_diagnostics(data: dict) -> str:
+    """Return unresolved and ambiguous note links grouped for human triage."""
+    diagnostics = data["linkDiagnostics"]
+    unresolved = diagnostics["unresolved"]
+    ambiguous = diagnostics["ambiguous"]
+    lines = [
+        f"Link diagnostics: {len(unresolved)} unresolved, {len(ambiguous)} ambiguous"
+    ]
+    if not unresolved and not ambiguous:
+        return "\n".join(lines + ["", "No unresolved or ambiguous note links."])
+
+    by_source: dict[str, list[tuple[str, dict]]] = {}
+    for kind, entries in (("unresolved", unresolved), ("ambiguous", ambiguous)):
+        for diagnostic in entries:
+            by_source.setdefault(diagnostic["source"], []).append((kind, diagnostic))
+
+    for source in sorted(by_source, key=str.casefold):
+        lines.extend(("", source))
+        entries = sorted(
+            by_source[source],
+            key=lambda item: (
+                item[0] != "unresolved",
+                item[1]["type"].casefold(),
+                item[1]["reference"].casefold(),
+            ),
+        )
+        for kind, diagnostic in entries:
+            lines.append(
+                f"  - {kind} {diagnostic['type']}: {diagnostic['reference']}"
+            )
+            candidates = diagnostic.get("candidates", [])
+            if candidates:
+                lines.append("    candidates: " + ", ".join(candidates))
+    return "\n".join(lines)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Vault root. Defaults to current directory.")
     parser.add_argument("--output", type=Path, default=Path("pages/vault-data.json"), help="Output JSON path.")
+    parser.add_argument(
+        "--report-links",
+        action="store_true",
+        help="Print unresolved/ambiguous links without writing the dataset.",
+    )
     args = parser.parse_args()
 
     data = build_dataset(args.root.resolve())
+    if args.report_links:
+        print(format_link_diagnostics(data))
+        return
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(serialize_dataset(data), encoding="utf-8")
     print(f"Wrote {data['counts']} to {args.output}")

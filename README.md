@@ -88,6 +88,15 @@ The generated `linkDiagnostics` section reports missing and ambiguous wiki-link
 references without failing the export. Repeated equivalent references in one
 note are collapsed, while ambiguous entries list every candidate path.
 
+For a deterministic human-readable report grouped by source note, run:
+
+```bash
+python3 tools/generate_vault_data.py --report-links
+```
+
+Report mode is read-only: it rebuilds diagnostics from the vault sources in
+memory and does not touch either tracked dataset copy.
+
 ## Contributing
 
 ```bash

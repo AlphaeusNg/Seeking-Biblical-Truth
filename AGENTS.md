@@ -49,6 +49,9 @@ python3 tools/sync_public_viewer.py
 # Read-only freshness and cross-repository equality check
 python3 tools/sync_public_viewer.py --check
 
+# Read-only unresolved/ambiguous link report grouped by source note
+python3 tools/generate_vault_data.py --report-links
+
 # Optional local vault viewer
 python3 -m http.server 8001
 # open http://127.0.0.1:8001/pages/

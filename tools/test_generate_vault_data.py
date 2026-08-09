@@ -1,18 +1,82 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-from tools.generate_vault_data import build_dataset
+from tools.generate_vault_data import build_dataset, format_link_diagnostics
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "pages" / "vault-data.json"
+GENERATOR = ROOT / "tools" / "generate_vault_data.py"
 
 
 class VaultDatasetTests(unittest.TestCase):
+    def test_formats_link_diagnostics_by_source_with_candidates(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for folder in ("A", "B"):
+                note = root / folder / "Grace.md"
+                note.parent.mkdir()
+                note.write_text(f"# {folder} Grace\n", encoding="utf-8")
+            (root / "Index.md").write_text(
+                "[[Missing Note]]\n[[Grace]]\n", encoding="utf-8"
+            )
+
+            report = format_link_diagnostics(build_dataset(root))
+
+            self.assertEqual(
+                report,
+                "Link diagnostics: 1 unresolved, 1 ambiguous\n"
+                "\n"
+                "Index.md\n"
+                "  - unresolved wikilink: Missing Note\n"
+                "  - ambiguous wikilink: Grace\n"
+                "    candidates: A/Grace.md, B/Grace.md",
+            )
+
+    def test_formats_an_explicit_empty_link_report(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Index.md").write_text("# No links\n", encoding="utf-8")
+
+            self.assertEqual(
+                format_link_diagnostics(build_dataset(root)),
+                "Link diagnostics: 0 unresolved, 0 ambiguous\n\n"
+                "No unresolved or ambiguous note links.",
+            )
+
+    def test_link_report_cli_is_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Index.md").write_text("[[Missing]]\n", encoding="utf-8")
+            output = root / "generated.json"
+            output.write_text("preserve me", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERATOR),
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--report-links",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Link diagnostics: 1 unresolved, 0 ambiguous", result.stdout)
+            self.assertIn("  - unresolved wikilink: Missing", result.stdout)
+            self.assertEqual(output.read_text(encoding="utf-8"), "preserve me")
+
     def test_reports_deduplicated_missing_and_ambiguous_wikilinks(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
