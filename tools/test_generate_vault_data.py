@@ -13,6 +13,59 @@ DATA_PATH = ROOT / "pages" / "vault-data.json"
 
 
 class VaultDatasetTests(unittest.TestCase):
+    def test_resolves_vault_root_wikilink_paths_with_optional_extension(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            topic = root / "Word of God" / "Grace.md"
+            topic.parent.mkdir()
+            topic.write_text("# Grace\n", encoding="utf-8")
+            (root / "Index.md").write_text(
+                "[[Word of God/Grace]]\n"
+                "[[Word of God/Grace.md|Grace again]]\n"
+                "[[Word%20of%20God/Grace]]\n"
+                "[[./Word of God/Grace]]\n",
+                encoding="utf-8",
+            )
+
+            links = build_dataset(root)["links"]
+            wikilinks = [link for link in links if link["type"] == "wikilink"]
+
+            self.assertEqual(
+                wikilinks,
+                [
+                    {
+                        "source": "Index.md",
+                        "target": "Word of God/Grace.md",
+                        "type": "wikilink",
+                    }
+                ],
+            )
+
+    def test_ambiguous_bare_title_does_not_create_the_wrong_edge(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for folder in ("A", "B"):
+                note = root / folder / "Grace.md"
+                note.parent.mkdir()
+                note.write_text(f"# {folder} Grace\n", encoding="utf-8")
+            (root / "Index.md").write_text(
+                "[[Grace]]\n[[B/Grace]]\n", encoding="utf-8"
+            )
+
+            links = build_dataset(root)["links"]
+            wikilinks = [link for link in links if link["type"] == "wikilink"]
+
+            self.assertEqual(
+                wikilinks,
+                [
+                    {
+                        "source": "Index.md",
+                        "target": "B/Grace.md",
+                        "type": "wikilink",
+                    }
+                ],
+            )
+
     def test_excludes_repository_metadata_from_public_notes(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

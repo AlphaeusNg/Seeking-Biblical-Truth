@@ -7,7 +7,7 @@ import argparse
 import json
 import re
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 
 EXCLUDED_PARTS = {".git", "__pycache__", "pages", "tools"}
@@ -39,16 +39,32 @@ def is_content_file(path: Path) -> bool:
     )
 
 
+def note_reference_key(value: str) -> str:
+    normalized = unquote(value).strip().replace("\\", "/").removeprefix("./")
+    if normalized.lower().endswith(".md"):
+        normalized = normalized[:-3]
+    return normalized.casefold()
+
+
 def build_dataset(root: Path) -> dict:
     md_files = sorted(path for path in root.rglob("*.md") if is_content_file(path.relative_to(root)))
     canvas_files = sorted(path for path in root.rglob("*.canvas") if is_content_file(path.relative_to(root)))
 
-    by_title: dict[str, str] = {}
+    by_title: dict[str, list[str]] = {}
+    by_path: dict[str, str] = {}
     known_paths: set[str] = set()
     for path in md_files:
         relative = rel(path, root)
         known_paths.add(relative)
-        by_title.setdefault(path.stem.lower(), relative)
+        by_title.setdefault(path.stem.casefold(), []).append(relative)
+        by_path[note_reference_key(relative)] = relative
+
+    def resolve_wikilink(target_text: str) -> str | None:
+        key = note_reference_key(target_text)
+        if "/" in key:
+            return by_path.get(key)
+        matches = by_title.get(key, [])
+        return matches[0] if len(matches) == 1 else None
 
     nodes: list[dict] = []
     links: list[dict] = []
@@ -74,7 +90,7 @@ def build_dataset(root: Path) -> dict:
         )
 
         for target_text in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?]]", text):
-            target = by_title.get(target_text.strip().lower())
+            target = resolve_wikilink(target_text)
             if target and target != relative:
                 key = (relative, target, "wikilink")
                 if key not in seen_links:
