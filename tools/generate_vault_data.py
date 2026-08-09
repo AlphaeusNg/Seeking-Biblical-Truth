@@ -199,6 +199,11 @@ def build_dataset(root: Path) -> dict:
     }
 
 
+def serialize_dataset(data: dict) -> str:
+    """Return the canonical, deterministic representation of a vault dataset."""
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Vault root. Defaults to current directory.")
@@ -207,7 +212,7 @@ def main() -> None:
 
     data = build_dataset(args.root.resolve())
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    args.output.write_text(serialize_dataset(data), encoding="utf-8")
     print(f"Wrote {data['counts']} to {args.output}")
 
 

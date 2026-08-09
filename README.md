@@ -30,7 +30,8 @@ Important ideas from the original README:
   - `pages/index.html`: interactive graph and note browser.
   - `pages/vault-data.json`: generated graph data from the real notes.
 - `tools/`: maintenance scripts.
-  - `tools/generate_vault_data.py`: regenerates the public viewer dataset from Markdown and canvas files.
+  - `tools/generate_vault_data.py`: regenerates this repo's viewer dataset from Markdown and canvas files.
+  - `tools/sync_public_viewer.py`: regenerates and byte-synchronizes both tracked dataset copies.
 - `index.html`: compatibility redirect to `pages/`.
 
 ## View In Obsidian
@@ -64,18 +65,19 @@ http://127.0.0.1:8001/pages/
 
 The public viewer defaults to rendered Markdown note previews and lets users toggle to the raw `.md` source. Internal wiki links, regular Markdown links, backlinks, and Obsidian deep links are all preserved where possible in the static web view.
 
-Regenerate graph data after changing notes:
+Regenerate and synchronize graph data after changing notes. The canonical
+portfolio checkout must exist beside this repo under `/home/alph/projects/`:
 
 ```bash
-python3 tools/generate_vault_data.py
+python3 tools/sync_public_viewer.py
 ```
 
-Validate the exporter and confirm the committed dataset is current:
+Validate the exporter and confirm both committed copies are current and
+byte-identical:
 
 ```bash
 python3 -m unittest discover -s tools -p 'test_*.py'
-python3 tools/generate_vault_data.py --output /tmp/vault-data.json
-cmp pages/vault-data.json /tmp/vault-data.json
+python3 tools/sync_public_viewer.py --check
 python3 -m compileall -q tools
 ```
 
@@ -106,5 +108,5 @@ Then open a pull request on GitHub.
 - Preserve the rendered/raw note toggle in the public viewer unless there is a stronger replacement.
 - Do not commit API keys, private local paths, generated caches, or broken prototypes.
 - Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.
-- After editing notes, run `python3 tools/generate_vault_data.py` and validate that `pages/vault-data.json` parses.
-- If the portfolio repo also needs the updated viewer data, copy `pages/vault-data.json` into `/home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json`.
+- After editing notes, run `python3 tools/sync_public_viewer.py`; it updates both the source export and the portfolio viewer copy from one canonical in-memory payload.
+- Run `python3 tools/sync_public_viewer.py --check` before committing. Commit and push each repository separately when both copies changed.

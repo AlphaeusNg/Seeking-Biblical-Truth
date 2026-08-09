@@ -40,12 +40,14 @@ tools/
 ```bash
 cd /home/alph/projects/Seeking-Biblical-Truth
 
-# Rebuild export
+# Rebuild only this repo's export
 python3 tools/generate_vault_data.py
 
-# Sync into portfolio for GitHub Pages
-cp pages/vault-data.json \
-  /home/alph/projects/alphaeusng.github.io/pages/seeking-biblical-truth/vault-data.json
+# Preferred after content changes: regenerate both tracked copies in one command
+python3 tools/sync_public_viewer.py
+
+# Read-only freshness and cross-repository equality check
+python3 tools/sync_public_viewer.py --check
 
 # Optional local vault viewer
 python3 -m http.server 8001
@@ -55,7 +57,7 @@ python3 -m http.server 8001
 ## Conventions
 
 - Prefer clear Markdown; keep wiki-links/obsidian conventions consistent with existing notes.
-- After substantive note or canvas changes, **regenerate and sync** `vault-data.json` to the portfolio (two repos → two commits if both should ship).
+- After substantive note or canvas changes, run `tools/sync_public_viewer.py` so the source and portfolio copies cannot drift (two repos still require two commits if both changed).
 - Don’t put private pastoral counseling notes here unless intended to be public via export.
 - Python tooling: `snake_case`, 4-space indent; run `python3 -m compileall tools` after script edits.
 
@@ -68,6 +70,6 @@ python3 -m http.server 8001
 ## Agent checklist
 
 1. Decide content-only vs viewer-UI vs both.
-2. Edit notes under this tree; run generator.
-3. Copy JSON to portfolio if the public site should update.
+2. Edit notes under this tree; run `python3 tools/sync_public_viewer.py`.
+3. Run the same command with `--check` before committing both changed copies.
 4. Validate viewer load on portfolio local server.
