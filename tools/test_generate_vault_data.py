@@ -169,6 +169,75 @@ class VaultDatasetTests(unittest.TestCase):
                 ],
             )
 
+    def test_resolves_relative_and_vault_root_markdown_note_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            word = root / "Word of God"
+            topics = root / "Topics"
+            word.mkdir()
+            topics.mkdir()
+            for name in ("Relative", "Root Target"):
+                (word / f"{name}.md").write_text(f"# {name}\n", encoding="utf-8")
+            (topics / "Index.md").write_text(
+                "[Relative](../Word%20of%20God/Relative.md#Hope)\n"
+                "[Root](/Word%20of%20God/Root%20Target.md)\n"
+                "[Case duplicate](/word%20OF%20god/root%20target.MD \"Read\")\n"
+                "[External](https://example.test/remote.md)\n",
+                encoding="utf-8",
+            )
+
+            markdown_links = [
+                link
+                for link in build_dataset(root)["links"]
+                if link["type"] == "markdown"
+            ]
+
+            self.assertEqual(
+                markdown_links,
+                [
+                    {
+                        "source": "Topics/Index.md",
+                        "target": "Word of God/Relative.md",
+                        "type": "markdown",
+                    },
+                    {
+                        "source": "Topics/Index.md",
+                        "target": "Word of God/Root Target.md",
+                        "type": "markdown",
+                    },
+                ],
+            )
+
+    def test_reports_missing_markdown_notes_but_ignores_external_urls(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Index.md").write_text(
+                "[Missing](Missing%20Note.md#Section)\n"
+                "[Same missing](./Missing Note.md)\n"
+                "[Outside](../../Outside.md)\n"
+                "[External](https://example.test/remote.md)\n",
+                encoding="utf-8",
+            )
+
+            data = build_dataset(root)
+
+            self.assertEqual(data["counts"]["unresolvedLinks"], 2)
+            self.assertEqual(
+                data["linkDiagnostics"]["unresolved"],
+                [
+                    {
+                        "source": "Index.md",
+                        "reference": "Missing Note.md",
+                        "type": "markdown",
+                    },
+                    {
+                        "source": "Index.md",
+                        "reference": "../../Outside.md",
+                        "type": "markdown",
+                    },
+                ],
+            )
+
     def test_excludes_repository_metadata_from_public_notes(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

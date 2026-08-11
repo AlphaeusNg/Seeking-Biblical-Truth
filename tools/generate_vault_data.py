@@ -7,7 +7,7 @@ import argparse
 import json
 import re
 from pathlib import Path
-from urllib.parse import quote, unquote
+from urllib.parse import quote, unquote, urlsplit
 
 
 EXCLUDED_PARTS = {".git", "__pycache__", "pages", "tools"}
@@ -44,6 +44,34 @@ def note_reference_key(value: str) -> str:
     if normalized.lower().endswith(".md"):
         normalized = normalized[:-3]
     return normalized.casefold()
+
+
+def markdown_note_destination(value: str) -> str | None:
+    """Return a decoded internal Markdown note path, excluding URL/title syntax."""
+    raw = value.strip()
+    if raw.startswith("<"):
+        closing = raw.find(">")
+        if closing < 0:
+            return None
+        destination = raw[1:closing].strip()
+    else:
+        match = re.fullmatch(
+            r"(?P<destination>.+?\.md(?:[?#]\S*)?)"
+            r"(?:\s+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?",
+            raw,
+            flags=re.I,
+        )
+        if not match:
+            return None
+        destination = match.group("destination")
+
+    parsed = urlsplit(destination)
+    if parsed.scheme or parsed.netloc:
+        return None
+    decoded_path = unquote(parsed.path).strip().replace("\\", "/")
+    if not decoded_path.lower().endswith(".md"):
+        return None
+    return decoded_path
 
 
 def build_dataset(root: Path) -> dict:
@@ -117,17 +145,41 @@ def build_dataset(root: Path) -> dict:
                     unresolved_links.append(diagnostic)
                 seen_diagnostics.add(diagnostic_key)
 
-        for target_text in re.findall(r"\[[^\]]+]\(([^)]+\.md)(?:#[^)]*)?\)", text):
-            target_path = (path.parent / target_text.replace("%20", " ")).resolve()
+        for raw_target in re.findall(r"(?<!!)\[[^\]\n]+]\(([^)\n]+)\)", text):
+            target_text = markdown_note_destination(raw_target)
+            if target_text is None:
+                continue
+            target_path = (
+                root / target_text.lstrip("/")
+                if target_text.startswith("/")
+                else path.parent / target_text
+            ).resolve()
             try:
-                target = target_path.relative_to(root).as_posix()
+                candidate = target_path.relative_to(root).as_posix()
             except ValueError:
-                target = ""
-            if target in known_paths and target != relative:
+                candidate = ""
+            target = by_path.get(note_reference_key(candidate)) if candidate else None
+            if target and target != relative:
                 key = (relative, target, "markdown")
                 if key not in seen_links:
                     links.append({"source": relative, "target": target, "type": "markdown"})
                     seen_links.add(key)
+            elif not target:
+                diagnostic_key = (
+                    relative,
+                    note_reference_key(target_text),
+                    "unresolved",
+                )
+                if diagnostic_key in seen_diagnostics:
+                    continue
+                unresolved_links.append(
+                    {
+                        "source": relative,
+                        "reference": target_text,
+                        "type": "markdown",
+                    }
+                )
+                seen_diagnostics.add(diagnostic_key)
 
     for path in canvas_files:
         relative = rel(path, root)

@@ -1,16 +1,76 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 96 across the projects workspace; vault Cycle 66)
+Last updated: 2026-08-11 (Cycle 106 across the projects workspace; vault Cycle 67)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: twenty-one exporter, synchronization, redirect-shell, and workflow-policy contract tests, read-only link and cross-repository reports, deterministic regeneration, and Python compilation.
+- Local verification: twenty-three exporter, synchronization, redirect-shell,
+  and workflow-policy contract tests, read-only link and cross-repository
+  reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: modernize and policy-test CI
+## Latest cycle: resolve and diagnose explicit Markdown note paths
+
+### Why this was selected
+
+The higher-impact content backlog requires owner intent for 26 theological and
+Scripture references, so speculative note edits were excluded. The safe
+exporter branch for regular Markdown `.md` links decoded only `%20`, understood
+only exact-case source-relative paths, treated vault-root paths as filesystem
+escapes, and silently discarded every resolution failure.
+
+### Changes
+
+- Added URL-aware Markdown note destination parsing with fragment/query and
+  optional title removal, complete percent decoding, and external-URL exclusion.
+- Resolved both source-relative and vault-root paths through the same
+  case-insensitive canonical note index used by explicit wiki paths.
+- Kept resolved targets inside the vault even across `..` segments or symlinks;
+  escape attempts become visible unresolved diagnostics.
+- Added Markdown diagnostic deduplication alongside wiki diagnostics while
+  preserving self-link and duplicate-edge behavior.
+- Added two isolated contracts spanning relative paths, vault-root paths,
+  casing, URL encoding, fragments, titles, missing duplicates, root escapes,
+  and ignored HTTPS `.md` URLs; documented the expanded contract.
+
+### Verification and scores
+
+- Test-first evidence: the path fixture resolved only the relative edge and
+  missed the vault-root target; the diagnostic fixture reported zero instead
+  of two unresolved internal links.
+- Focused regression: both new fixtures passed after implementation.
+- `python3 -m unittest discover -s tools -p 'test_*.py'`: 23 passed in 0.110s
+  (up from 21).
+- `python3 tools/sync_public_viewer.py --check`: source export and portfolio
+  copy remain current and byte-identical.
+- The read-only report remains exactly 26 unresolved wiki-links across seven
+  notes and zero ambiguous links; the real vault has no internal Markdown
+  `.md` links, so both committed datasets remain byte-identical.
+- Python compilation and `git diff --check` passed.
+- Correctness/reliability: 5/10 → 9/10 (explicit Markdown paths now share
+  deterministic vault semantics instead of filesystem accidents).
+- Verifiability: 4/10 → 9/10 (success, failure, deduplication, containment, and
+  external exclusion all have fixtures).
+- Maintainability: 6/10 → 8/10 (destination parsing is isolated and canonical
+  path lookup is reused).
+- Performance: 10/10 → 10/10 (linear note scanning and indexed lookup are
+  unchanged in practical cost).
+- Security/robustness: 6/10 → 9/10 (resolved paths cannot escape the vault and
+  external URLs cannot pollute internal diagnostics).
+
+### Lessons and process improvements
+
+- A resolver should never silently drop internal failures while a parallel
+  link syntax has diagnostics; link-integrity semantics need to converge.
+- Parse URL structure before filesystem resolution, then canonicalize through
+  the known-note index rather than trusting raw path casing.
+- When the live corpus lacks a syntax branch, preserve future correctness with
+  isolated fixtures and require byte-identical production output.
+
+## Previous cycle: modernize and policy-test CI
 
 ### Why this was selected
 
@@ -44,6 +104,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Recent project evolution
 
+- Cycle 67: added path-aware Markdown note resolution and unresolved-link
+  diagnostics without changing the current public dataset.
 - Cycle 66: upgraded setup-python to v7 and added sixteen self-enforced CI policy assertions.
 - Cycle 65: retired the active duplicate viewer behind inert canonical redirects while preserving both legacy Pages URLs.
 - Cycle 64: added deterministic, read-only, source-grouped link diagnostics for maintainers.
@@ -57,11 +119,14 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
-| 2 | Resolve and diagnose Markdown links with explicit path semantics | Correctness / maintainability | Low currently | Small-medium / low | The alternate resolver silently drops failures, but the real exported vault currently contains zero Markdown `.md` links |
-| 3 | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Dataset writes are unified, but Git histories and pushes correctly remain separate and non-transactional |
+| 2 | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Dataset writes are unified, but Git histories and pushes correctly remain separate and non-transactional |
+| — | Resolve and diagnose Markdown links with explicit path semantics | Correctness / maintainability | Low currently | Small-medium / low | Relative/root paths and internal failures now share canonical resolution and diagnostics | Completed in Cycle 67 |
 | — | Modernize and policy-test GitHub Actions | Process / observability | Medium | Small-medium / low | setup-python v7 plus sixteen policy assertions enforce the complete bounded gate | Completed in Cycle 66 |
 | — | Retire the duplicate local viewer without breaking legacy URLs | Maintainability / security | Medium-high | Small-medium / low | Two contract-tested compatibility redirects replace the active 20 KB CDN-driven duplicate | Completed in Cycle 65 |
 
 ## Next cycle
 
-Local next: obtain content-owner classification for the 26 unresolved references before changing notes; the remaining tool-only items are lower impact. Workspace next: rotate to another repository after two focused vault cycles and avoid speculative theological edits.
+Local next: obtain content-owner classification for the 26 unresolved references
+before changing notes; the remaining paired-Git helper is lower impact and
+appropriately opt-in. Workspace next: rotate to another repository and avoid
+speculative theological edits.
