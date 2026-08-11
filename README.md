@@ -26,13 +26,13 @@ Important ideas from the original README:
 - `Journal/`: journal notes.
 - `Big Picture.canvas`: Obsidian canvas used by the graph generator.
 - `.obsidian/`: Obsidian settings and selected plugins for the full local vault experience.
-- `pages/`: public static viewer for GitHub Pages.
-  - `pages/index.html`: interactive graph and note browser.
+- `pages/`: generated export plus compatibility route for GitHub Pages.
+  - `pages/index.html`: redirect to the canonical portfolio viewer.
   - `pages/vault-data.json`: generated graph data from the real notes.
 - `tools/`: maintenance scripts.
   - `tools/generate_vault_data.py`: regenerates this repo's viewer dataset from Markdown and canvas files.
   - `tools/sync_public_viewer.py`: regenerates and byte-synchronizes both tracked dataset copies.
-- `index.html`: compatibility redirect to `pages/`.
+- `index.html`: compatibility redirect to the canonical portfolio viewer.
 
 ## View In Obsidian
 
@@ -51,16 +51,20 @@ The public web viewer includes `obsidian://open?vault=Seeking-Biblical-Truth` li
 
 ## Public Viewer
 
-Run locally:
-
-```bash
-python3 -m http.server 8001
-```
-
-Open:
+The canonical viewer is:
 
 ```text
-http://127.0.0.1:8001/pages/
+https://alphaeusng.github.io/pages/seeking-biblical-truth/
+```
+
+The historical GitHub Pages paths for this repository remain as no-index
+redirects. To preview the canonical UI locally, serve the sibling portfolio
+checkout:
+
+```bash
+cd /home/alph/projects/alphaeusng.github.io
+python3 -m http.server 8001
+# open http://127.0.0.1:8001/pages/seeking-biblical-truth/
 ```
 
 The public viewer defaults to rendered Markdown note previews and lets users toggle to the raw `.md` source. Internal wiki links, regular Markdown links, backlinks, and Obsidian deep links are all preserved where possible in the static web view.
@@ -113,8 +117,9 @@ Then open a pull request on GitHub.
 - Treat this repo primarily as an Obsidian vault, not as an app codebase.
 - Keep notes and canvases in content folders, not in `pages/` or `tools/`.
 - Put maintenance scripts in `tools/`.
-- Keep public web files in `pages/`.
-- Preserve the rendered/raw note toggle in the public viewer unless there is a stronger replacement.
+- Keep the generated export and compatibility redirect in `pages/`; edit the
+  canonical viewer only in the sibling portfolio repository.
+- Preserve the canonical viewer's rendered/raw note toggle unless there is a stronger replacement.
 - Do not commit API keys, private local paths, generated caches, or broken prototypes.
 - Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.
 - After editing notes, run `python3 tools/sync_public_viewer.py`; it updates both the source export and the portfolio viewer copy from one canonical in-memory payload.

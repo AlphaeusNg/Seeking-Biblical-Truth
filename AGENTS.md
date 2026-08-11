@@ -20,7 +20,7 @@ Meaning of ideas, words/
 My Search for Truth.md
 Big Picture.canvas           # Graph source for export
 pages/
-  index.html                 # Optional local viewer shell
+  index.html                 # Compatibility redirect to canonical portfolio viewer
   vault-data.json            # Generated — do not hand-edit casually
 tools/
   generate_vault_data.py     # Export Markdown + canvas → vault-data.json
@@ -52,9 +52,10 @@ python3 tools/sync_public_viewer.py --check
 # Read-only unresolved/ambiguous link report grouped by source note
 python3 tools/generate_vault_data.py --report-links
 
-# Optional local vault viewer
+# Optional canonical viewer preview (run from the sibling portfolio checkout)
+cd /home/alph/projects/alphaeusng.github.io
 python3 -m http.server 8001
-# open http://127.0.0.1:8001/pages/
+# open http://127.0.0.1:8001/pages/seeking-biblical-truth/
 ```
 
 ## Conventions
