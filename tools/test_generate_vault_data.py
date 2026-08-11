@@ -34,8 +34,8 @@ class VaultDatasetTests(unittest.TestCase):
                 "Link diagnostics: 1 unresolved, 1 ambiguous\n"
                 "\n"
                 "Index.md\n"
-                "  - unresolved wikilink: Missing Note\n"
-                "  - ambiguous wikilink: Grace\n"
+                "  - unresolved wikilink (line 1): Missing Note\n"
+                "  - ambiguous wikilink (line 2): Grace\n"
                 "    candidates: A/Grace.md, B/Grace.md",
             )
 
@@ -74,7 +74,7 @@ class VaultDatasetTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("Link diagnostics: 1 unresolved, 0 ambiguous", result.stdout)
-            self.assertIn("  - unresolved wikilink: Missing", result.stdout)
+            self.assertIn("  - unresolved wikilink (line 1): Missing", result.stdout)
             self.assertEqual(output.read_text(encoding="utf-8"), "preserve me")
 
     def test_reports_deduplicated_missing_and_ambiguous_wikilinks(self) -> None:
@@ -103,6 +103,7 @@ class VaultDatasetTests(unittest.TestCase):
                             "source": "Index.md",
                             "reference": "Missing Note",
                             "type": "wikilink",
+                            "lines": [1, 2],
                         }
                     ],
                     "ambiguous": [
@@ -110,6 +111,7 @@ class VaultDatasetTests(unittest.TestCase):
                             "source": "Index.md",
                             "reference": "Grace",
                             "type": "wikilink",
+                            "lines": [3],
                             "candidates": ["A/Grace.md", "B/Grace.md"],
                         }
                     ],
@@ -229,11 +231,13 @@ class VaultDatasetTests(unittest.TestCase):
                         "source": "Index.md",
                         "reference": "Missing Note.md",
                         "type": "markdown",
+                        "lines": [1, 2],
                     },
                     {
                         "source": "Index.md",
                         "reference": "../../Outside.md",
                         "type": "markdown",
+                        "lines": [3],
                     },
                 ],
             )
@@ -346,6 +350,9 @@ class VaultDatasetTests(unittest.TestCase):
             + data["linkDiagnostics"]["ambiguous"]
         ):
             self.assertIn(diagnostic["source"], ids)
+            self.assertTrue(diagnostic["lines"])
+            self.assertEqual(diagnostic["lines"], sorted(set(diagnostic["lines"])))
+            self.assertTrue(all(line > 0 for line in diagnostic["lines"]))
 
 
 if __name__ == "__main__":

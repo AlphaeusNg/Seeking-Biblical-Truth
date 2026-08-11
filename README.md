@@ -95,8 +95,11 @@ The generated `linkDiagnostics` section reports missing internal Markdown and
 wiki-link references, plus ambiguous wiki-links, without failing the export.
 Markdown note links honor source-relative and vault-root paths, URL encoding,
 anchors, optional titles, and canonical path casing. Repeated equivalent
-references in one note are collapsed, while ambiguous entries list every
-candidate path; external URLs are intentionally excluded from vault diagnostics.
+references in one note are collapsed with every distinct source line retained,
+while ambiguous entries list every candidate path; external URLs are
+intentionally excluded from vault diagnostics. The human-readable report prints
+those line numbers so each reference can be reviewed in context without
+changing note content.
 
 For a deterministic human-readable report grouped by source note, run:
 

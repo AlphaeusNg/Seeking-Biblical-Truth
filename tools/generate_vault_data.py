@@ -108,7 +108,35 @@ def build_dataset(root: Path) -> dict:
     seen_links: set[tuple[str, str, str]] = set()
     unresolved_links: list[dict] = []
     ambiguous_links: list[dict] = []
-    seen_diagnostics: set[tuple[str, str, str]] = set()
+    diagnostics_by_key: dict[tuple[str, str, str], dict] = {}
+
+    def record_link_diagnostic(
+        *,
+        source: str,
+        reference: str,
+        link_type: str,
+        kind: str,
+        line: int,
+        candidates: list[str] | None = None,
+    ) -> None:
+        diagnostic_key = (source, note_reference_key(reference), kind)
+        diagnostic = diagnostics_by_key.get(diagnostic_key)
+        if diagnostic is not None:
+            diagnostic["lines"] = sorted({*diagnostic["lines"], line})
+            return
+
+        diagnostic = {
+            "source": source,
+            "reference": unquote(reference).strip(),
+            "type": link_type,
+            "lines": [line],
+        }
+        if candidates:
+            diagnostic["candidates"] = candidates
+            ambiguous_links.append(diagnostic)
+        else:
+            unresolved_links.append(diagnostic)
+        diagnostics_by_key[diagnostic_key] = diagnostic
 
     for path in md_files:
         relative = rel(path, root)
@@ -129,7 +157,11 @@ def build_dataset(root: Path) -> dict:
             }
         )
 
-        for target_text in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?]]", text):
+        for match in re.finditer(
+            r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?]]",
+            text,
+        ):
+            target_text = match.group(1)
             target, candidates = resolve_wikilink(target_text)
             if target and target != relative:
                 key = (relative, target, "wikilink")
@@ -138,22 +170,17 @@ def build_dataset(root: Path) -> dict:
                     seen_links.add(key)
             elif not target:
                 kind = "ambiguous" if candidates else "unresolved"
-                diagnostic_key = (relative, note_reference_key(target_text), kind)
-                if diagnostic_key in seen_diagnostics:
-                    continue
-                diagnostic = {
-                    "source": relative,
-                    "reference": unquote(target_text).strip(),
-                    "type": "wikilink",
-                }
-                if candidates:
-                    diagnostic["candidates"] = candidates
-                    ambiguous_links.append(diagnostic)
-                else:
-                    unresolved_links.append(diagnostic)
-                seen_diagnostics.add(diagnostic_key)
+                record_link_diagnostic(
+                    source=relative,
+                    reference=target_text,
+                    link_type="wikilink",
+                    kind=kind,
+                    line=text.count("\n", 0, match.start()) + 1,
+                    candidates=candidates,
+                )
 
-        for raw_target in re.findall(r"(?<!!)\[[^\]\n]+]\(([^)\n]+)\)", text):
+        for match in re.finditer(r"(?<!!)\[[^\]\n]+]\(([^)\n]+)\)", text):
+            raw_target = match.group(1)
             target_text = markdown_note_destination(raw_target)
             if target_text is None:
                 continue
@@ -173,21 +200,13 @@ def build_dataset(root: Path) -> dict:
                     links.append({"source": relative, "target": target, "type": "markdown"})
                     seen_links.add(key)
             elif not target:
-                diagnostic_key = (
-                    relative,
-                    note_reference_key(target_text),
-                    "unresolved",
+                record_link_diagnostic(
+                    source=relative,
+                    reference=target_text,
+                    link_type="markdown",
+                    kind="unresolved",
+                    line=text.count("\n", 0, match.start()) + 1,
                 )
-                if diagnostic_key in seen_diagnostics:
-                    continue
-                unresolved_links.append(
-                    {
-                        "source": relative,
-                        "reference": target_text,
-                        "type": "markdown",
-                    }
-                )
-                seen_diagnostics.add(diagnostic_key)
 
     for path in canvas_files:
         relative = rel(path, root)
@@ -285,14 +304,22 @@ def format_link_diagnostics(data: dict) -> str:
         entries = sorted(
             by_source[source],
             key=lambda item: (
+                item[1]["lines"][0],
                 item[0] != "unresolved",
                 item[1]["type"].casefold(),
                 item[1]["reference"].casefold(),
             ),
         )
         for kind, diagnostic in entries:
+            source_lines = diagnostic["lines"]
+            location = (
+                f"line {source_lines[0]}"
+                if len(source_lines) == 1
+                else "lines " + ", ".join(str(line) for line in source_lines)
+            )
             lines.append(
-                f"  - {kind} {diagnostic['type']}: {diagnostic['reference']}"
+                f"  - {kind} {diagnostic['type']} ({location}): "
+                f"{diagnostic['reference']}"
             )
             candidates = diagnostic.get("candidates", [])
             if candidates:

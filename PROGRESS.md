@@ -1,6 +1,6 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 126 across the projects workspace; vault Cycle 69)
+Last updated: 2026-08-11 (Cycle 135 across the projects workspace; vault Cycle 70)
 
 ## Current state
 
@@ -12,7 +12,66 @@ Last updated: 2026-08-11 (Cycle 126 across the projects workspace; vault Cycle 6
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: make the two-repository Git handoff observable and opt-in
+## Latest cycle: locate unresolved references at their source lines
+
+### Why this was selected
+
+Resolving the 26 reported references still requires content-owner judgment, so
+the notes themselves remained untouched. The read-only report named each source
+file and target but not the occurrence lines; duplicate targets were collapsed
+without retaining where every occurrence appeared. That made safe owner review
+needlessly manual.
+
+### Changes
+
+- Switched wiki-link and Markdown-link discovery from value-only matching to
+  position-aware matching while preserving existing resolution behavior.
+- Added a sorted, unique, positive `lines` array to every unresolved or
+  ambiguous diagnostic; equivalent duplicate targets retain all distinct source
+  lines while remaining one diagnostic.
+- Updated the human report to print `line N` or `lines N, M` and sort each
+  source group by first occurrence, making the output follow note context.
+- Strengthened existing exporter fixtures across wiki, ambiguous, Markdown,
+  duplicate, CLI, and whole-vault integrity paths.
+- Synchronized the canonical metadata-only dataset to both tracked repositories;
+  note/canvas content and the 55-note/99-link graph remain unchanged.
+- Aligned the portfolio consumer contract with both supported diagnostic types
+  (`wikilink` and `markdown`) and required non-empty, sorted, unique positive
+  source lines through isolated mutation fixtures.
+
+### Verification and scores
+
+- Test-first evidence: all three focused source-location contracts failed; the
+  old schema had no `lines` field and the report had no location text.
+- Downstream test-first evidence: the portfolio validator helper did not exist,
+  and review exposed that its inline check rejected the exporter's supported
+  `markdown` diagnostic type.
+- Focused source and downstream schema suites passed after implementation.
+- Canonical sync and read-only check report byte-identical source/public copies.
+- The real report still contains 26 unresolved and zero ambiguous references;
+  it now reveals 27 occurrence lines, including `Eph 5_25-27` on lines 3 and 5.
+- Full source discovery passed all 30 exporter, synchronization, redirect, and
+  workflow tests; Python compilation and `git diff --check` passed.
+- The paired portfolio gate passed 24 Python contracts, deterministic finance
+  and sitemap checks, all site contracts, four Chromium journeys, recursive
+  syntax checks, and a zero-vulnerability npm audit.
+- Correctness/reliability: 7/10 → 9/10 (deduplication no longer discards distinct source locations).
+- Verifiability: 7/10 → 10/10 (producer and consumer enforce the same located two-syntax schema).
+- Maintainability: 7/10 → 9/10 (one diagnostic recorder owns deduplication and location merging).
+- Performance: 10/10 → 10/10 (position accounting remains negligible for 55 small notes).
+- Security/robustness: 9/10 → 9/10 (strict UTF-8 and containment behavior are unchanged).
+- Developer/content-owner experience: 5/10 → 9/10 (every unresolved target now points directly to review context).
+
+### Lessons and process improvements
+
+- Deduplication should remove repeated decisions, not erase occurrence evidence;
+  aggregate locations on the canonical diagnostic key.
+- Validate generated schemas at both producer and consumer boundaries. A branch
+  with zero live examples can otherwise drift despite having source fixtures.
+- When content intent blocks safe edits, improve the evidence available to the
+  owner without guessing at the content decision.
+
+## Previous cycle: make the two-repository Git handoff observable and opt-in
 
 ### Why this was selected
 
@@ -239,6 +298,7 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
+| — | Preserve source locations for link diagnostics | Observability / DX | Medium | Small-medium / low | Twenty-six diagnostics now retain 27 exact occurrence lines and the public consumer validates the shared schema | Completed in Cycle 70 |
 | — | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Read-only dual status and preflighted staged-only commits preserve separate histories and never push | Completed in Cycle 69 |
 | — | Fail closed on invalid UTF-8 source bytes | Correctness / robustness | High | Small / low | Note/canvas corruption and newline preservation now have isolated contracts | Completed in Cycle 68 |
 | — | Resolve and diagnose Markdown links with explicit path semantics | Correctness / maintainability | Low currently | Small-medium / low | Relative/root paths and internal failures now share canonical resolution and diagnostics | Completed in Cycle 67 |
