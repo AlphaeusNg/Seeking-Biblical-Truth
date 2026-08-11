@@ -89,7 +89,9 @@ The same lossless-export, link-integrity, freshness, and Python checks run in
 least-privilege GitHub Actions on every `main` push and pull request.
 Source notes and canvases must be valid UTF-8. Export fails with the exact
 vault-relative path instead of deleting undecodable bytes, and valid source
-newline sequences are preserved in public note content.
+newline sequences are preserved in public note content. A discovered note or
+canvas may be a symlink only when its resolved target remains inside the vault;
+external and broken source links fail before any public dataset is assembled.
 
 The generated `linkDiagnostics` section reports missing internal Markdown and
 wiki-link references, plus ambiguous wiki-links, without failing the export.

@@ -31,6 +31,21 @@ def read_source_text(path: Path, root: Path, kind: str) -> str:
         raise ValueError(f"Invalid UTF-8 in {kind}: {rel(path, root)}") from error
 
 
+def require_source_within_vault(path: Path, root: Path, kind: str) -> None:
+    """Reject source entries whose resolved bytes live outside the vault."""
+    relative = rel(path, root)
+    try:
+        resolved = path.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise ValueError(f"Cannot resolve {kind} source: {relative}") from error
+    try:
+        resolved.relative_to(root)
+    except ValueError as error:
+        raise ValueError(
+            f"{kind.capitalize()} source resolves outside vault: {relative}"
+        ) from error
+
+
 def excerpt(text: str) -> str:
     cleaned = re.sub(r"```.*?```", "", text, flags=re.S)
     cleaned = re.sub(r"!\[[^\]]*]\([^)]+\)", "", cleaned)
@@ -83,8 +98,13 @@ def markdown_note_destination(value: str) -> str | None:
 
 
 def build_dataset(root: Path) -> dict:
+    root = root.resolve()
     md_files = sorted(path for path in root.rglob("*.md") if is_content_file(path.relative_to(root)))
     canvas_files = sorted(path for path in root.rglob("*.canvas") if is_content_file(path.relative_to(root)))
+    for path in md_files:
+        require_source_within_vault(path, root, "note")
+    for path in canvas_files:
+        require_source_within_vault(path, root, "canvas")
 
     by_title: dict[str, list[str]] = {}
     by_path: dict[str, str] = {}

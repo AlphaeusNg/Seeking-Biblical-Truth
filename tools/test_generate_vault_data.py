@@ -314,6 +314,64 @@ class VaultDatasetTests(unittest.TestCase):
             ):
                 build_dataset(root)
 
+    def test_note_symlink_outside_vault_fails_with_its_relative_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            projects = Path(temp_dir)
+            root = projects / "vault"
+            root.mkdir()
+            private_note = projects / "private.md"
+            private_note.write_text("# Private\nexternal secret\n", encoding="utf-8")
+            (root / "Leaked.md").symlink_to(private_note)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Note source resolves outside vault: Leaked\.md",
+            ):
+                build_dataset(root)
+
+    def test_canvas_symlink_outside_vault_fails_with_its_relative_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            projects = Path(temp_dir)
+            root = projects / "vault"
+            root.mkdir()
+            private_canvas = projects / "private.canvas"
+            private_canvas.write_text(
+                '{"nodes": [], "edges": []}', encoding="utf-8"
+            )
+            (root / "Leaked.canvas").symlink_to(private_canvas)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Canvas source resolves outside vault: Leaked\.canvas",
+            ):
+                build_dataset(root)
+
+    def test_note_symlink_inside_vault_preserves_its_lexical_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target = root / "Target.md"
+            target.write_text("# Target\n", encoding="utf-8")
+            (root / "Alias.md").symlink_to(target)
+
+            note_ids = {
+                node["id"]
+                for node in build_dataset(root)["nodes"]
+                if node["type"] == "note"
+            }
+
+            self.assertEqual(note_ids, {"Alias.md", "Target.md"})
+
+    def test_broken_note_symlink_fails_with_its_relative_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Broken.md").symlink_to(root / "missing.md")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Cannot resolve note source: Broken\.md",
+            ):
+                build_dataset(root)
+
     def test_invalid_canvas_fails_instead_of_disappearing(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

@@ -1,18 +1,70 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 135 across the projects workspace; vault Cycle 70)
+Last updated: 2026-08-11 (Cycle 144 across the projects workspace; vault Cycle 71)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: thirty exporter, synchronization, redirect-shell,
+- Local verification: thirty-four exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: locate unresolved references at their source lines
+## Latest cycle: keep resolved source bytes inside the vault
+
+### Why this was selected
+
+The 26 unresolved references still require content-owner judgment, so the
+notes remain untouched. Exporter discovery used lexical paths only: a Markdown
+or canvas symlink inside the vault could resolve to a file outside it, and the
+generator would publish those external bytes as if they belonged to the vault.
+A direct reproduction exported an external file containing `external secret`
+under the in-vault ID `Leaked.md`.
+
+### Changes
+
+- Resolve every discovered Markdown and canvas source before indexing or
+  reading it, and require the resolved target to remain beneath the resolved
+  vault root.
+- Fail closed with the source kind and lexical vault-relative path when a
+  source escapes the vault or cannot be resolved; valid internal sources keep
+  their existing IDs and behavior.
+- Added isolated note and canvas escape fixtures and documented the source
+  containment rule alongside the existing strict UTF-8 contract.
+
+### Verification and scores
+
+- Test-first evidence: both external-symlink fixtures failed because no error
+  was raised; the note fixture reproduced publication of the external secret.
+- All four escape, internal-link, and broken-link containment contracts pass
+  after implementation; all 34 exporter, synchronization, redirect, and
+  workflow-policy tests pass.
+- An internal symlink retains its lexical public ID, while a broken source
+  fails with `Cannot resolve note source: Broken.md`.
+- Deterministic regeneration remains byte-identical at 55 notes, one canvas,
+  62 nodes, 99 links, 26 unresolved references, and zero ambiguous references;
+  both tracked repository copies remain current and identical.
+- Python compilation and `git diff --check` pass.
+- Correctness/reliability: 6/10 → 10/10 (public source identity cannot name bytes outside its vault boundary).
+- Verifiability: 7/10 → 10/10 (both source kinds have direct escape fixtures plus unchanged-corpus proof).
+- Maintainability: 8/10 → 9/10 (one pre-ingestion guard owns containment for both source kinds).
+- Performance: 10/10 → 10/10 (56 local path resolutions are negligible beside source reads).
+- Security/robustness: 4/10 → 10/10 (external or broken source links fail before dataset assembly).
+- Developer experience: 7/10 → 9/10 (failures name the lexical vault path instead of leaking or surfacing later read errors).
+
+### Lessons and process improvements
+
+- Containment must be checked on resolved source bytes, not only on the lexical
+  path found beneath a trusted directory.
+- Apply trust checks before indexing and parsing so unsafe entries cannot
+  influence any partially assembled dataset.
+- When content decisions are blocked, probe producer trust boundaries with
+  adversarial temporary files; a two-line symlink fixture exposed a concrete
+  leak without touching theology.
+
+## Previous cycle: locate unresolved references at their source lines
 
 ### Why this was selected
 
@@ -298,6 +350,9 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
+| 2 | Reject canonical note-path collisions | Correctness / portability | Medium | Small-medium / low | Case-folded and percent-decoded explicit paths currently overwrite one another in `by_path` on case-sensitive filesystems |
+| 3 | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | A future Markdown file below `.obsidian` or another dot-directory would currently become a public note |
+| — | Require resolved source containment | Correctness / security | High | Small / low | Note and canvas escape fixtures now reject external or broken source targets before ingestion | Completed in Cycle 71 |
 | — | Preserve source locations for link diagnostics | Observability / DX | Medium | Small-medium / low | Twenty-six diagnostics now retain 27 exact occurrence lines and the public consumer validates the shared schema | Completed in Cycle 70 |
 | — | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Read-only dual status and preflighted staged-only commits preserve separate histories and never push | Completed in Cycle 69 |
 | — | Fail closed on invalid UTF-8 source bytes | Correctness / robustness | High | Small / low | Note/canvas corruption and newline preservation now have isolated contracts | Completed in Cycle 68 |
@@ -308,6 +363,6 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 ## Next cycle
 
 Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes; no remaining high-confidence content correction should
-guess at theological intent. Workspace next: rotate to CardFitSG and inspect its
-current correctness and verification backlog.
+before changing notes. Absent that input, reject canonical explicit-path
+collisions rather than silently choosing one note. Workspace next: rotate to
+CardFitSG and inspect its current correctness and verification backlog.
