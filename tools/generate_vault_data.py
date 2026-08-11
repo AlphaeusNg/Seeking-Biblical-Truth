@@ -23,6 +23,14 @@ def folder_for(path: Path, root: Path) -> str:
     return parts[0] if len(parts) > 1 else "Root"
 
 
+def read_source_text(path: Path, root: Path, kind: str) -> str:
+    """Decode a source exactly as UTF-8 or fail with its vault-relative path."""
+    try:
+        return path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ValueError(f"Invalid UTF-8 in {kind}: {rel(path, root)}") from error
+
+
 def excerpt(text: str) -> str:
     cleaned = re.sub(r"```.*?```", "", text, flags=re.S)
     cleaned = re.sub(r"!\[[^\]]*]\([^)]+\)", "", cleaned)
@@ -104,7 +112,7 @@ def build_dataset(root: Path) -> dict:
 
     for path in md_files:
         relative = rel(path, root)
-        text = path.read_text(encoding="utf-8", errors="ignore")
+        text = read_source_text(path, root, "note")
         headings = re.findall(r"^(#{1,4})\s+(.+)$", text, flags=re.M)
         nodes.append(
             {
@@ -183,7 +191,7 @@ def build_dataset(root: Path) -> dict:
 
     for path in canvas_files:
         relative = rel(path, root)
-        text = path.read_text(encoding="utf-8", errors="ignore")
+        text = read_source_text(path, root, "canvas")
         try:
             canvas = json.loads(text)
         except json.JSONDecodeError as error:

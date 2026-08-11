@@ -271,6 +271,45 @@ class VaultDatasetTests(unittest.TestCase):
             self.assertGreater(len(source), 7000)
             self.assertEqual(note["content"], source)
 
+    def test_preserves_source_newline_sequences(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = b"# Windows note\r\n\r\nComplete line\r\n"
+            (root / "Windows.md").write_bytes(source)
+
+            note = next(
+                node
+                for node in build_dataset(root)["nodes"]
+                if node["type"] == "note"
+            )
+
+            self.assertEqual(note["content"], source.decode("utf-8"))
+
+    def test_invalid_utf8_note_fails_with_its_relative_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Broken.md").write_bytes(b"# Broken\ntruth \xff omitted\n")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Invalid UTF-8 in note: Broken\.md",
+            ) as raised:
+                build_dataset(root)
+            self.assertIsInstance(raised.exception.__cause__, UnicodeDecodeError)
+
+    def test_invalid_utf8_canvas_fails_with_its_relative_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Broken.canvas").write_bytes(
+                b'{"nodes": [], "edges": []}\xff'
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Invalid UTF-8 in canvas: Broken\.canvas",
+            ):
+                build_dataset(root)
+
     def test_invalid_canvas_fails_instead_of_disappearing(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

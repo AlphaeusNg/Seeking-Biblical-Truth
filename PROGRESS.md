@@ -1,18 +1,73 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 106 across the projects workspace; vault Cycle 67)
+Last updated: 2026-08-11 (Cycle 116 across the projects workspace; vault Cycle 68)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: twenty-three exporter, synchronization, redirect-shell,
+- Local verification: twenty-six exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: resolve and diagnose explicit Markdown note paths
+## Latest cycle: fail closed on undecodable vault sources
+
+### Why this was selected
+
+The 26 unresolved references remain content-owner decisions, so changing them
+would be speculative. Exporter review exposed a higher-confidence correctness
+bug: Markdown and canvas reads used `errors="ignore"`. Invalid UTF-8 bytes were
+silently deleted, which could alter public note content or even turn corrupt
+canvas bytes into apparently valid JSON despite the lossless-export promise.
+
+### Changes
+
+- Added one byte-preserving UTF-8 source reader shared by Markdown and canvas
+  ingestion.
+- Invalid UTF-8 now aborts export with a concise source kind and vault-relative
+  path while retaining the original `UnicodeDecodeError` as its cause.
+- Reading bytes before decoding also preserves CRLF and other valid source
+  newline sequences instead of applying universal-newline conversion.
+- Added three isolated contracts for CRLF preservation, corrupt note failure,
+  and corrupt-but-otherwise-valid canvas failure; coverage increased from 23
+  to 26 tests.
+- Documented the strict source-encoding and newline contract.
+
+### Verification and scores
+
+- Test-first evidence: all three contracts failed—the CRLF body was normalized
+  to LF, and neither invalid source raised an error.
+- Focused regression: all three passed after the shared reader replaced both
+  permissive calls.
+- Full discovery passed 26 tests in 0.090s; source regeneration and the public
+  portfolio copy remain current and byte-identical.
+- The read-only report remains exactly 26 unresolved wiki-links across seven
+  notes and zero ambiguous links; canonical output did not change.
+- Python compilation and `git diff --check` passed; hosted evidence is recorded
+  in the Cycle 116 completion summary.
+- Correctness/reliability: 5/10 → 10/10 (source text is preserved exactly or
+  rejected rather than silently rewritten).
+- Verifiability: 7/10 → 10/10 (note, canvas, and newline-loss modes have direct
+  isolated fixtures).
+- Maintainability: 8/10 → 9/10 (one reader owns encoding policy and contextual
+  errors).
+- Performance: 10/10 → 10/10 (one byte read and UTF-8 decode replaces one text
+  read for this small vault).
+- Security/robustness: 6/10 → 9/10 (malformed input can no longer bypass JSON or
+  content checks through discarded bytes).
+
+### Lessons and process improvements
+
+- Never combine “lossless” export with permissive decode errors; silent repair
+  is data corruption even when the resulting text looks plausible.
+- A corrupt fixture should include bytes around otherwise valid structure so
+  tests prove the decoder—not a later parser—owns the failure.
+- When the top content opportunity needs owner intent, continue with a
+  reversible tooling defect supported by direct evidence.
+
+## Previous cycle: resolve and diagnose explicit Markdown note paths
 
 ### Why this was selected
 
@@ -104,6 +159,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Recent project evolution
 
+- Cycle 68: made note/canvas UTF-8 decoding lossless and fail-closed with exact
+  relative-path diagnostics.
 - Cycle 67: added path-aware Markdown note resolution and unresolved-link
   diagnostics without changing the current public dataset.
 - Cycle 66: upgraded setup-python to v7 and added sixteen self-enforced CI policy assertions.
@@ -120,6 +177,7 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
 | 2 | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Dataset writes are unified, but Git histories and pushes correctly remain separate and non-transactional |
+| — | Fail closed on invalid UTF-8 source bytes | Correctness / robustness | High | Small / low | Note/canvas corruption and newline preservation now have isolated contracts | Completed in Cycle 68 |
 | — | Resolve and diagnose Markdown links with explicit path semantics | Correctness / maintainability | Low currently | Small-medium / low | Relative/root paths and internal failures now share canonical resolution and diagnostics | Completed in Cycle 67 |
 | — | Modernize and policy-test GitHub Actions | Process / observability | Medium | Small-medium / low | setup-python v7 plus sixteen policy assertions enforce the complete bounded gate | Completed in Cycle 66 |
 | — | Retire the duplicate local viewer without breaking legacy URLs | Maintainability / security | Medium-high | Small-medium / low | Two contract-tested compatibility redirects replace the active 20 KB CDN-driven duplicate | Completed in Cycle 65 |
@@ -128,5 +186,5 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 Local next: obtain content-owner classification for the 26 unresolved references
 before changing notes; the remaining paired-Git helper is lower impact and
-appropriately opt-in. Workspace next: rotate to another repository and avoid
-speculative theological edits.
+appropriately opt-in. Workspace next: rotate to CardFitSG and avoid speculative
+theological edits.
