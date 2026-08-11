@@ -31,7 +31,7 @@ Important ideas from the original README:
   - `pages/vault-data.json`: generated graph data from the real notes.
 - `tools/`: maintenance scripts.
   - `tools/generate_vault_data.py`: regenerates this repo's viewer dataset from Markdown and canvas files.
-  - `tools/sync_public_viewer.py`: regenerates and byte-synchronizes both tracked dataset copies.
+  - `tools/sync_public_viewer.py`: regenerates and byte-synchronizes both tracked dataset copies, reports both Git worktrees, and can commit explicitly staged sync changes without pushing.
 - `index.html`: compatibility redirect to the canonical portfolio viewer.
 
 ## View In Obsidian
@@ -106,6 +106,31 @@ python3 tools/generate_vault_data.py --report-links
 
 Report mode is read-only: it rebuilds diagnostics from the vault sources in
 memory and does not touch either tracked dataset copy.
+
+### Optional two-repository handoff
+
+After synchronizing, inspect both repositories from one read-only command:
+
+```bash
+python3 tools/sync_public_viewer.py --git-status
+```
+
+The command first proves both dataset copies are current and byte-identical,
+then prints the complete short Git status for this vault and the sibling
+portfolio. To create the two local commits, explicitly stage the intended
+source notes/canvases and both generated datasets, then opt in:
+
+```bash
+git add -- 'path/to/edited-note.md' pages/vault-data.json
+git -C ../alphaeusng.github.io add -- pages/seeking-biblical-truth/vault-data.json
+python3 tools/sync_public_viewer.py --commit-staged --commit-message "Sync public vault data"
+```
+
+The helper aborts before either commit if a repository contains any unstaged or
+untracked work, or if a repository has staged changes without its dataset. It
+commits each repository's already-staged index separately and never stages,
+pushes, or claims cross-repository atomicity. Review the resulting commits and
+push the two repositories separately.
 
 ## Contributing
 

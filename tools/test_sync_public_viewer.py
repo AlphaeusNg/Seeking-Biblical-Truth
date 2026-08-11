@@ -34,6 +34,41 @@ class PublicViewerSyncTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
 
+    def run_sync_cli(self, *arguments: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(SYNC_SCRIPT),
+                "--vault-root",
+                str(self.vault_root),
+                "--public-output",
+                str(self.public_output),
+                *arguments,
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    def git(self, root: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", "-C", str(root), *arguments],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+    def initialize_repositories(self) -> tuple[Path, Path]:
+        sync_public_viewer(self.vault_root, self.public_output)
+        public_root = self.public_output.parents[2]
+        for root in (self.vault_root, public_root):
+            self.git(root, "init", "--quiet", "--initial-branch=main")
+            self.git(root, "config", "user.name", "Sync Test")
+            self.git(root, "config", "user.email", "sync-test@example.com")
+            self.git(root, "add", ".")
+            self.git(root, "commit", "--quiet", "-m", "Baseline")
+        return self.vault_root, public_root
+
     def test_sync_writes_identical_source_and_public_payloads_idempotently(self) -> None:
         changed = sync_public_viewer(self.vault_root, self.public_output)
         source_output = self.vault_root / "pages" / "vault-data.json"
@@ -114,6 +149,80 @@ class PublicViewerSyncTests(unittest.TestCase):
             sync_public_viewer(empty_vault, self.public_output)
 
         self.assertEqual(self.public_output.read_text(encoding="utf-8"), "preserve me")
+
+    def test_git_status_reports_both_repositories_without_writing(self) -> None:
+        source_root, public_root = self.initialize_repositories()
+        (self.vault_root / "Index.md").write_text("# Changed\n", encoding="utf-8")
+        sync_public_viewer(self.vault_root, self.public_output)
+        source_before = self.git(source_root, "status", "--short").stdout
+        public_before = self.git(public_root, "status", "--short").stdout
+
+        result = self.run_sync_cli("--git-status")
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"Source repository ({source_root}):", result.stdout)
+        self.assertIn(" M Index.md", result.stdout)
+        self.assertIn(" M pages/vault-data.json", result.stdout)
+        self.assertIn(f"Public repository ({public_root}):", result.stdout)
+        self.assertIn(" M pages/seeking-biblical-truth/vault-data.json", result.stdout)
+        self.assertEqual(self.git(source_root, "status", "--short").stdout, source_before)
+        self.assertEqual(self.git(public_root, "status", "--short").stdout, public_before)
+
+    def test_commit_staged_refuses_all_commits_when_work_is_unstaged(self) -> None:
+        source_root, public_root = self.initialize_repositories()
+        (self.vault_root / "Index.md").write_text("# Changed\n", encoding="utf-8")
+        sync_public_viewer(self.vault_root, self.public_output)
+        self.git(source_root, "add", "Index.md", "pages/vault-data.json")
+        self.git(public_root, "add", "pages/seeking-biblical-truth/vault-data.json")
+        (public_root / "forgotten.txt").write_text("not staged\n", encoding="utf-8")
+
+        result = self.run_sync_cli("--commit-staged")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Public repository has unstaged or untracked changes", result.stderr)
+        self.assertEqual(self.git(source_root, "rev-list", "--count", "HEAD").stdout, "1\n")
+        self.assertEqual(self.git(public_root, "rev-list", "--count", "HEAD").stdout, "1\n")
+
+    def test_commit_staged_requires_the_repository_dataset_in_the_index(self) -> None:
+        source_root, public_root = self.initialize_repositories()
+        (source_root / "README.md").write_text("staged but unrelated\n", encoding="utf-8")
+        self.git(source_root, "add", "README.md")
+
+        result = self.run_sync_cli("--commit-staged")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "Source repository has staged changes but not its dataset",
+            result.stderr,
+        )
+        self.assertEqual(self.git(source_root, "rev-list", "--count", "HEAD").stdout, "1\n")
+        self.assertEqual(self.git(public_root, "rev-list", "--count", "HEAD").stdout, "1\n")
+
+    def test_commit_staged_creates_separate_commits_without_pushing(self) -> None:
+        source_root, public_root = self.initialize_repositories()
+        (self.vault_root / "Index.md").write_text("# Changed\n", encoding="utf-8")
+        sync_public_viewer(self.vault_root, self.public_output)
+        self.git(source_root, "add", "Index.md", "pages/vault-data.json")
+        self.git(public_root, "add", "pages/seeking-biblical-truth/vault-data.json")
+
+        result = self.run_sync_cli(
+            "--commit-staged", "--commit-message", "Sync fixture data"
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Committed Source repository", result.stdout)
+        self.assertIn("Committed Public repository", result.stdout)
+        self.assertIn("No pushes were performed", result.stdout)
+        self.assertEqual(
+            self.git(source_root, "log", "-1", "--format=%s").stdout,
+            "Sync fixture data\n",
+        )
+        self.assertEqual(
+            self.git(public_root, "log", "-1", "--format=%s").stdout,
+            "Sync fixture data\n",
+        )
+        self.assertEqual(self.git(source_root, "status", "--short").stdout, "")
+        self.assertEqual(self.git(public_root, "status", "--short").stdout, "")
 
 
 if __name__ == "__main__":

@@ -1,18 +1,79 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 116 across the projects workspace; vault Cycle 68)
+Last updated: 2026-08-11 (Cycle 126 across the projects workspace; vault Cycle 69)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: twenty-six exporter, synchronization, redirect-shell,
+- Local verification: thirty exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: fail closed on undecodable vault sources
+## Latest cycle: make the two-repository Git handoff observable and opt-in
+
+### Why this was selected
+
+The 26 unresolved references remain content-owner decisions, so speculative
+theological edits were excluded. Dataset generation and copying already used
+one canonical payload, but operators still had to inspect and commit two Git
+repositories manually. That gap made it easy to forget one repository, include
+unstaged work accidentally, or assume the two histories were transactional.
+
+### Changes
+
+- Added `--git-status`, a read-only action that first verifies both generated
+  copies and then reports the complete short status of the source and public
+  repositories from one command.
+- Added `--commit-staged`, which requires current byte-identical datasets,
+  refuses all commits if either repository has unstaged or untracked work, and
+  requires the relevant dataset in every non-empty index.
+- Preflights Git author and committer identities in every pending repository
+  before creating the first commit, then reports each resulting short revision.
+- Kept staging and pushing explicitly outside the helper; separate commits are
+  honest about Git's non-transactional cross-repository boundary and safe to
+  retry if a later repository hook fails.
+- Added four isolated CLI contracts covering read-only reporting, all-or-none
+  preflight refusal, dataset-index enforcement, separate commits, clean final
+  status, custom messages, and the no-push guarantee; coverage rose from 26 to
+  30 tests.
+- Documented the intentional stage/status/commit/push workflow and safeguards.
+
+### Verification and scores
+
+- Test-first evidence: all three initial CLI contracts failed with argparse
+  errors because neither opt-in action existed.
+- Focused regression passed all new status/commit paths after implementation;
+  self-review added the fourth dataset-index enforcement contract.
+- Full discovery passed 30 tests; the source export and portfolio copy remain
+  current and byte-identical, and Python compilation plus `git diff --check`
+  passed.
+- A real `--git-status` run named exactly the two files changed by this cycle in
+  the vault repository and reported the sibling portfolio repository clean.
+- Correctness/reliability: 6/10 → 9/10 (forgotten or partially prepared Git
+  state now fails before either commit).
+- Verifiability: 5/10 → 10/10 (both repositories and every mutation boundary
+  have isolated real-Git fixtures).
+- Maintainability: 7/10 → 9/10 (one script owns generation, freshness, status,
+  and the conservative commit handoff).
+- Developer experience: 5/10 → 9/10 (one report and one explicit commit action
+  replace error-prone directory switching while retaining operator control).
+- Security/robustness: 6/10 → 9/10 (the helper cannot stage, push, or silently
+  include forgotten work).
+
+### Lessons and process improvements
+
+- Cross-repository convenience should expose the non-atomic boundary instead
+  of pretending it can provide a transaction.
+- Staging is the operator's intent boundary: tooling may validate it, but should
+  not infer a note/content scope and stage files automatically.
+- Repository-specific test discovery paths belong in the cycle load checklist;
+  the initial `tools/tests` assumption failed before the documented `tools`
+  command restored a green baseline.
+
+## Previous cycle: fail closed on undecodable vault sources
 
 ### Why this was selected
 
@@ -159,6 +220,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Recent project evolution
 
+- Cycle 69: added verified dual-repository status and conservative staged-only
+  commits without automatic staging or pushing.
 - Cycle 68: made note/canvas UTF-8 decoding lossless and fail-closed with exact
   relative-path diagnostics.
 - Cycle 67: added path-aware Markdown note resolution and unresolved-link
@@ -176,7 +239,7 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
-| 2 | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Dataset writes are unified, but Git histories and pushes correctly remain separate and non-transactional |
+| — | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Read-only dual status and preflighted staged-only commits preserve separate histories and never push | Completed in Cycle 69 |
 | — | Fail closed on invalid UTF-8 source bytes | Correctness / robustness | High | Small / low | Note/canvas corruption and newline preservation now have isolated contracts | Completed in Cycle 68 |
 | — | Resolve and diagnose Markdown links with explicit path semantics | Correctness / maintainability | Low currently | Small-medium / low | Relative/root paths and internal failures now share canonical resolution and diagnostics | Completed in Cycle 67 |
 | — | Modernize and policy-test GitHub Actions | Process / observability | Medium | Small-medium / low | setup-python v7 plus sixteen policy assertions enforce the complete bounded gate | Completed in Cycle 66 |
@@ -185,6 +248,6 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 ## Next cycle
 
 Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes; the remaining paired-Git helper is lower impact and
-appropriately opt-in. Workspace next: rotate to CardFitSG and avoid speculative
-theological edits.
+before changing notes; no remaining high-confidence content correction should
+guess at theological intent. Workspace next: rotate to CardFitSG and inspect its
+current correctness and verification backlog.

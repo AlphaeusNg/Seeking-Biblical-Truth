@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import os
 import stat
+import subprocess
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 
 if __package__:
@@ -27,6 +29,19 @@ DEFAULT_PUBLIC_OUTPUT = (
 
 class SyncError(RuntimeError):
     """Raised when public viewer synchronization cannot proceed safely."""
+
+
+@dataclass(frozen=True)
+class RepositoryStatus:
+    """Git state relevant to a synchronized dataset repository."""
+
+    label: str
+    root: Path
+    target: str
+    short_status: str
+    staged: tuple[str, ...]
+    unstaged: tuple[str, ...]
+    untracked: tuple[str, ...]
 
 
 def _matches(path: Path, payload: str) -> bool:
@@ -60,6 +75,117 @@ def _validate_public_target(public_output: Path) -> None:
         raise SyncError(f"public viewer directory is missing: {viewer_dir}")
     if not (viewer_dir / "index.html").is_file():
         raise SyncError(f"public viewer entry point is missing: {viewer_dir / 'index.html'}")
+
+
+def _run_git(directory: Path, *arguments: str) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(directory), *arguments],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as error:
+        raise SyncError(f"could not run Git: {error}") from error
+    if result.returncode:
+        detail = result.stderr.strip() or result.stdout.strip() or "unknown Git error"
+        raise SyncError(f"Git failed in {directory}: {detail}")
+    return result.stdout
+
+
+def _nul_paths(output: str) -> tuple[str, ...]:
+    return tuple(path for path in output.split("\0") if path)
+
+
+def _repository_status(label: str, target: Path) -> RepositoryStatus:
+    root = Path(_run_git(target.parent, "rev-parse", "--show-toplevel").strip()).resolve()
+    try:
+        relative_target = target.resolve().relative_to(root).as_posix()
+    except ValueError as error:
+        raise SyncError(f"{label} target is outside its Git repository: {target}") from error
+    return RepositoryStatus(
+        label=label,
+        root=root,
+        target=relative_target,
+        short_status=_run_git(root, "status", "--short", "--untracked-files=all").rstrip(),
+        staged=_nul_paths(_run_git(root, "diff", "--cached", "--name-only", "-z")),
+        unstaged=_nul_paths(_run_git(root, "diff", "--name-only", "-z")),
+        untracked=_nul_paths(
+            _run_git(root, "ls-files", "--others", "--exclude-standard", "-z")
+        ),
+    )
+
+
+def repository_statuses(
+    vault_root: Path,
+    public_output: Path,
+) -> tuple[RepositoryStatus, RepositoryStatus]:
+    """Return complete read-only Git status for both dataset repositories."""
+    vault_root = vault_root.resolve()
+    public_output = public_output.resolve()
+    statuses = (
+        _repository_status("Source repository", vault_root / "pages" / "vault-data.json"),
+        _repository_status("Public repository", public_output),
+    )
+    if statuses[0].root == statuses[1].root:
+        raise SyncError("source export and public viewer copy must use separate Git repositories")
+    return statuses
+
+
+def format_repository_statuses(statuses: tuple[RepositoryStatus, ...]) -> str:
+    sections = []
+    for status in statuses:
+        body = status.short_status or "clean"
+        sections.append(
+            f"{status.label} ({status.root}):\n"
+            + "\n".join(f"  {line}" for line in body.splitlines())
+        )
+    return "\n".join(sections)
+
+
+def commit_staged_repositories(
+    vault_root: Path,
+    public_output: Path,
+    *,
+    message: str = "Sync public vault data",
+) -> list[tuple[str, str]]:
+    """Commit explicitly staged sync changes in each repository, without pushing."""
+    if not message.strip():
+        raise SyncError("commit message must not be empty")
+    statuses = repository_statuses(vault_root, public_output)
+    issues = []
+    for status in statuses:
+        forgotten = status.unstaged + status.untracked
+        if forgotten:
+            issues.append(
+                f"{status.label} has unstaged or untracked changes: "
+                + ", ".join(forgotten)
+            )
+        if status.staged and status.target not in status.staged:
+            issues.append(
+                f"{status.label} has staged changes but not its dataset: {status.target}"
+            )
+    if issues:
+        raise SyncError("; ".join(issues))
+
+    pending = [status for status in statuses if status.staged]
+    for status in pending:
+        _run_git(status.root, "var", "GIT_AUTHOR_IDENT")
+        _run_git(status.root, "var", "GIT_COMMITTER_IDENT")
+
+    committed = []
+    for status in pending:
+        try:
+            _run_git(status.root, "commit", "-m", message.strip())
+            revision = _run_git(status.root, "rev-parse", "--short", "HEAD").strip()
+        except SyncError as error:
+            completed = ", ".join(label for label, _ in committed)
+            prefix = f"{completed} committed; " if completed else ""
+            raise SyncError(
+                f"{prefix}{status.label} commit failed. No pushes were performed. {error}"
+            ) from error
+        committed.append((status.label, revision))
+    return committed
 
 
 def sync_public_viewer(
@@ -113,10 +239,25 @@ def sync_public_viewer(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    action = parser.add_mutually_exclusive_group()
+    action.add_argument(
         "--check",
         action="store_true",
         help="Verify both copies without writing them.",
+    )
+    action.add_argument(
+        "--git-status",
+        action="store_true",
+        help="Verify both copies, then show read-only Git status for both repositories.",
+    )
+    action.add_argument(
+        "--commit-staged",
+        action="store_true",
+        help="Verify both copies, then separately commit already-staged changes; never push.",
+    )
+    parser.add_argument(
+        "--commit-message",
+        help="Commit message for --commit-staged (default: Sync public vault data).",
     )
     parser.add_argument(
         "--vault-root",
@@ -131,18 +272,40 @@ def main() -> None:
         help="Portfolio viewer data path. Defaults to the canonical sibling checkout.",
     )
     args = parser.parse_args()
+    if args.commit_message is not None and not args.commit_staged:
+        parser.error("--commit-message requires --commit-staged")
 
     try:
         changed = sync_public_viewer(
             args.vault_root,
             args.public_output,
-            check=args.check,
+            check=args.check or args.git_status or args.commit_staged,
         )
+        statuses = None
+        committed = None
+        if args.git_status:
+            statuses = repository_statuses(args.vault_root, args.public_output)
+        elif args.commit_staged:
+            committed = commit_staged_repositories(
+                args.vault_root,
+                args.public_output,
+                message=args.commit_message or "Sync public vault data",
+            )
     except SyncError as error:
         parser.exit(1, f"ERROR: {error}\n")
 
     if args.check:
         print("Source export and public viewer copy are current and byte-identical.")
+    elif args.git_status:
+        print("Source export and public viewer copy are current and byte-identical.")
+        print(format_repository_statuses(statuses))
+    elif args.commit_staged:
+        if committed:
+            for label, revision in committed:
+                print(f"Committed {label} at {revision}.")
+        else:
+            print("No staged dataset changes to commit in either repository.")
+        print("No pushes were performed; push each repository separately.")
     elif changed:
         print("Synchronized " + " and ".join(changed) + ".")
     else:
