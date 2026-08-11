@@ -47,6 +47,10 @@ under the in-vault ID `Leaked.md`.
   62 nodes, 99 links, 26 unresolved references, and zero ambiguous references;
   both tracked repository copies remain current and identical.
 - Python compilation and `git diff --check` pass.
+- Hosted CI for `194218b` passed all 34 tests, committed-export freshness, and
+  compilation in 9s; the compatibility Pages deployment also completed.
+- The live legacy route serves its canonical no-index redirect, and the
+  portfolio viewer target responds HTTP 200.
 - Correctness/reliability: 6/10 → 10/10 (public source identity cannot name bytes outside its vault boundary).
 - Verifiability: 7/10 → 10/10 (both source kinds have direct escape fixtures plus unchanged-corpus proof).
 - Maintainability: 8/10 → 9/10 (one pre-ingestion guard owns containment for both source kinds).
