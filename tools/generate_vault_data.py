@@ -113,7 +113,13 @@ def build_dataset(root: Path) -> dict:
         relative = rel(path, root)
         known_paths.add(relative)
         by_title.setdefault(path.stem.casefold(), []).append(relative)
-        by_path[note_reference_key(relative)] = relative
+        # Case-folded, percent-decoded paths must name one note on every filesystem.
+        key = note_reference_key(relative)
+        existing = by_path.get(key)
+        if existing is not None and existing != relative:
+            left, right = sorted((existing, relative), key=str.casefold)
+            raise ValueError(f"Canonical note path collision: {left} and {right}")
+        by_path[key] = relative
 
     def resolve_wikilink(target_text: str) -> tuple[str | None, list[str]]:
         key = note_reference_key(target_text)

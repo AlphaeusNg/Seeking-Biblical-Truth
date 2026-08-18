@@ -1,18 +1,71 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-11 (Cycle 144 across the projects workspace; vault Cycle 71)
+Last updated: 2026-08-18 (Cycle 154 across the projects workspace; vault Cycle 72)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: thirty-four exporter, synchronization, redirect-shell,
+- Local verification: thirty-six exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: keep resolved source bytes inside the vault
+## Latest cycle: reject canonical note-path collisions
+
+### Why this was selected
+
+Workspace rotation returned here after KoboForge. The 26 unresolved references
+still require content-owner judgment, so the notes remain untouched. Explicit
+path indexing wrote case-folded, percent-decoded keys into `by_path` and
+silently kept the last source, so `Topics/Grace.md` and `topics/Grace.md`, or
+`Note A.md` and `Note%20A.md`, could both exist on a case-sensitive filesystem
+while only one identity remained resolvable.
+
+### Changes
+
+- Refuse to index a second Markdown source whose canonical path key already
+  names a different lexical vault path.
+- Fail closed with both colliding relative paths, sorted for a stable message.
+- Unique internal sources keep their existing IDs, title-ambiguity behavior,
+  and link resolution.
+- Added isolated case-fold and percent-decode collision fixtures and documented
+  the uniqueness rule.
+
+### Verification and scores
+
+- Test-first evidence: both collision fixtures exported successfully because
+  `by_path` overwrote the earlier source and raised nothing.
+- All 36 exporter, synchronization, redirect, and workflow-policy tests pass
+  after implementation, including both new collision contracts.
+- Deterministic regeneration remains byte-identical at 55 notes, one canvas,
+  62 nodes, 99 links, 26 unresolved references, and zero ambiguous references;
+  both tracked repository copies remain current and identical.
+- Python compilation and `git diff --check` pass.
+- Correctness/reliability: 6/10 → 10/10 (explicit-path identity cannot silently
+  drop a colliding source).
+- Verifiability: 7/10 → 10/10 (case-fold and percent-decode collisions have
+  direct fail-closed fixtures plus unchanged-corpus proof).
+- Maintainability: 8/10 → 9/10 (one index-time uniqueness check owns the
+  canonical path key).
+- Performance: 10/10 → 10/10 (one dictionary lookup per note).
+- Security/robustness: 8/10 → 10/10 (portable path identity no longer depends
+  on filesystem case sensitivity).
+- Developer/content-owner experience: 6/10 → 9/10 (collisions name both lexical
+  paths instead of publishing an arbitrary survivor).
+
+### Lessons and process improvements
+
+- A resolver key that normalizes case and encoding is a uniqueness constraint,
+  not just a lookup convenience; last-write-wins is data loss on case-sensitive
+  filesystems.
+- Report both lexical paths in a deterministic order so operators can find the
+  files even when the walk order is not obvious.
+- When content decisions are blocked, keep probing producer identity boundaries
+  with adversarial temporary files rather than guessing at theology.
+
+## Previous cycle: keep resolved source bytes inside the vault
 
 ### Why this was selected
 
@@ -335,6 +388,12 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Recent project evolution
 
+- Cycle 72: rejected case-folded and percent-decoded explicit-path collisions
+  before link resolution.
+- Cycle 71: required resolved Markdown and canvas sources to stay inside the
+  vault before ingestion.
+- Cycle 70: preserved exact occurrence lines on unresolved and ambiguous
+  diagnostics.
 - Cycle 69: added verified dual-repository status and conservative staged-only
   commits without automatic staging or pushing.
 - Cycle 68: made note/canvas UTF-8 decoding lossless and fail-closed with exact
@@ -354,8 +413,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
-| 2 | Reject canonical note-path collisions | Correctness / portability | Medium | Small-medium / low | Case-folded and percent-decoded explicit paths currently overwrite one another in `by_path` on case-sensitive filesystems |
-| 3 | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | A future Markdown file below `.obsidian` or another dot-directory would currently become a public note |
+| 2 | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | A future Markdown file below `.obsidian` or another dot-directory would currently become a public note |
+| — | Reject canonical note-path collisions | Correctness / portability | Medium | Small / low | Case-fold and percent-decode fixtures now fail closed before `by_path` can overwrite a source | Completed in Cycle 72 |
 | — | Require resolved source containment | Correctness / security | High | Small / low | Note and canvas escape fixtures now reject external or broken source targets before ingestion | Completed in Cycle 71 |
 | — | Preserve source locations for link diagnostics | Observability / DX | Medium | Small-medium / low | Twenty-six diagnostics now retain 27 exact occurrence lines and the public consumer validates the shared schema | Completed in Cycle 70 |
 | — | Add an opt-in paired commit/status helper | Process / reliability | Low-medium | Medium / medium | Read-only dual status and preflighted staged-only commits preserve separate histories and never push | Completed in Cycle 69 |
@@ -367,6 +426,6 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 ## Next cycle
 
 Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes. Absent that input, reject canonical explicit-path
-collisions rather than silently choosing one note. Workspace next: rotate to
+before changing notes. Absent that input, exclude hidden configuration Markdown
+such as `.obsidian` notes from public discovery. Workspace next: rotate to
 CardFitSG and inspect its current correctness and verification backlog.

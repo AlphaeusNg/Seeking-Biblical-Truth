@@ -63,6 +63,7 @@ python3 -m http.server 8001
 - Prefer clear Markdown; keep wiki-links/obsidian conventions consistent with existing notes.
 - After substantive note or canvas changes, run `tools/sync_public_viewer.py` so the source and portfolio copies cannot drift (two repos still require two commits if both changed).
 - Don’t put private pastoral counseling notes here unless intended to be public via export.
+- Canonical explicit note paths must stay unique after percent-decoding and case-folding; colliding sources fail export instead of silently overwriting one another.
 - Python tooling: `snake_case`, 4-space indent; run `python3 -m compileall tools` after script edits.
 
 ## Deploy

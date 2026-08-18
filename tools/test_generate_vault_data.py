@@ -372,6 +372,32 @@ class VaultDatasetTests(unittest.TestCase):
             ):
                 build_dataset(root)
 
+    def test_case_folded_note_path_collision_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for folder in ("Topics", "topics"):
+                note = root / folder / "Grace.md"
+                note.parent.mkdir()
+                note.write_text(f"# {folder} Grace\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Canonical note path collision: Topics/Grace\.md and topics/Grace\.md",
+            ):
+                build_dataset(root)
+
+    def test_percent_decoded_note_path_collision_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Note A.md").write_text("# Spaced\n", encoding="utf-8")
+            (root / "Note%20A.md").write_text("# Encoded\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Canonical note path collision: Note A\.md and Note%20A\.md",
+            ):
+                build_dataset(root)
+
     def test_invalid_canvas_fails_instead_of_disappearing(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
