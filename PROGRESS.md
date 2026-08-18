@@ -12,7 +12,44 @@ Last updated: 2026-08-18 (Cycle 162 across the projects workspace; vault Cycle 7
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: reject canonical note-path collisions
+## Latest cycle: exclude hidden configuration Markdown
+
+### Why this was selected
+
+The 26 unresolved references still need content-owner judgment. The documented
+fallback was to stop hidden configuration Markdown such as `.obsidian` notes
+from becoming public notes if one is added later.
+
+### Changes
+
+- Treat any path part that starts with `.` as non-content during discovery.
+- Added a fixture that keeps `.obsidian/Note.md` out of the exported node set
+  while preserving a real `Word of God` note.
+
+### Verification and scores
+
+- Test-first: `is_content_file(.obsidian/workspace.md)` was true before the
+  filter.
+- `python3 -m unittest discover -s tools -p 'test_*.py'`: 37 passed.
+- `sync_public_viewer.py --check`: source and public viewer remain
+  byte-identical; public corpus unchanged.
+- Correctness/reliability: 7/10 → 9/10 (editor-only Markdown cannot enter the export).
+- Verifiability: 6/10 → 10/10 (hidden and public paths are both asserted).
+- Maintainability: 8/10 → 9/10 (one hidden-part helper covers all dot-directories).
+- Security/robustness: 6/10 → 9/10 (`.obsidian` and `.github` notes stay private).
+- Performance: 10/10 → 10/10.
+
+### Lessons and process improvements
+
+- Prefer excluding all hidden path parts over a one-off `.obsidian` string so
+  future editor/config directories inherit the same policy.
+
+### Explicit next opportunity
+
+Content-owner classification of the 26 unresolved references. Workspace next:
+continue rotation; skip Car-Type-Classification-Service.
+
+## Previous cycle: reject canonical note-path collisions
 
 ### Why this was selected
 
@@ -413,7 +450,7 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
-| 2 | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | A future Markdown file below `.obsidian` or another dot-directory would currently become a public note |
+| — | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | Dot-directory and dot-file Markdown is omitted; public corpus unchanged | Completed in Cycle 73 |
 | — | Reject canonical note-path collisions | Correctness / portability | Medium | Small / low | Case-fold and percent-decode fixtures now fail closed before `by_path` can overwrite a source | Completed in Cycle 72 |
 | — | Require resolved source containment | Correctness / security | High | Small / low | Note and canvas escape fixtures now reject external or broken source targets before ingestion | Completed in Cycle 71 |
 | — | Preserve source locations for link diagnostics | Observability / DX | Medium | Small-medium / low | Twenty-six diagnostics now retain 27 exact occurrence lines and the public consumer validates the shared schema | Completed in Cycle 70 |
@@ -426,6 +463,5 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 ## Next cycle
 
 Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes. Absent that input, exclude hidden configuration Markdown
-such as `.obsidian` notes from public discovery. Workspace next: rotate to
-CardFitSG and inspect its current correctness and verification backlog.
+before changing notes. Workspace next: continue rotation and skip
+Car-Type-Classification-Service.
