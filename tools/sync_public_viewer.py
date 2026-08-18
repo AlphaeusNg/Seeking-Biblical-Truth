@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import stat
 import subprocess
@@ -12,9 +13,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 if __package__:
-    from .generate_vault_data import build_dataset, serialize_dataset
+    from .generate_vault_data import build_dataset, format_dataset_summary, serialize_dataset
 else:
-    from generate_vault_data import build_dataset, serialize_dataset
+    from generate_vault_data import build_dataset, format_dataset_summary, serialize_dataset
 
 
 VAULT_ROOT = Path(__file__).resolve().parents[1]
@@ -296,8 +297,18 @@ def main() -> None:
 
     if args.check:
         print("Source export and public viewer copy are current and byte-identical.")
+        source_output = args.vault_root.resolve() / "pages" / "vault-data.json"
+        try:
+            print(format_dataset_summary(json.loads(source_output.read_text(encoding="utf-8"))))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            pass
     elif args.git_status:
         print("Source export and public viewer copy are current and byte-identical.")
+        source_output = args.vault_root.resolve() / "pages" / "vault-data.json"
+        try:
+            print(format_dataset_summary(json.loads(source_output.read_text(encoding="utf-8"))))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            pass
         print(format_repository_statuses(statuses))
     elif args.commit_staged:
         if committed:

@@ -9,8 +9,10 @@ from pathlib import Path
 
 from tools.generate_vault_data import (
     build_dataset,
+    format_dataset_summary,
     format_link_diagnostics,
     is_content_file,
+    serialize_dataset,
 )
 
 
@@ -62,6 +64,14 @@ class VaultDatasetTests(unittest.TestCase):
                 "    candidates: A/Grace.md, B/Grace.md",
             )
 
+    def test_dataset_summary_names_counts_without_rewriting_notes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Index.md").write_text("# No links\n", encoding="utf-8")
+            summary = format_dataset_summary(build_dataset(root))
+            self.assertIn("Vault snapshot: 1 notes, 0 canvas, 1 links, 1 folders.", summary)
+            self.assertIn("Link health: 0 unresolved, 0 ambiguous.", summary)
+
     def test_formats_an_explicit_empty_link_report(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -96,9 +106,59 @@ class VaultDatasetTests(unittest.TestCase):
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Vault snapshot:", result.stdout)
+            self.assertIn("Link health:", result.stdout)
             self.assertIn("Link diagnostics: 1 unresolved, 0 ambiguous", result.stdout)
             self.assertIn("  - unresolved wikilink (line 1): Missing", result.stdout)
             self.assertEqual(output.read_text(encoding="utf-8"), "preserve me")
+
+    def test_check_cli_is_read_only_and_prints_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Index.md").write_text("# No links\n", encoding="utf-8")
+            output = root / "pages" / "vault-data.json"
+            output.parent.mkdir()
+            fresh = serialize_dataset(build_dataset(root))
+            output.write_text(fresh, encoding="utf-8")
+            marker = "preserve me"
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERATOR),
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--check",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Vault snapshot:", result.stdout)
+            self.assertIn("Committed dataset matches vault sources.", result.stdout)
+            self.assertEqual(output.read_text(encoding="utf-8"), fresh)
+
+            output.write_text(marker, encoding="utf-8")
+            stale = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERATOR),
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--check",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(stale.returncode, 1)
+            self.assertIn("stale", stale.stderr)
+            self.assertEqual(output.read_text(encoding="utf-8"), marker)
 
     def test_reports_deduplicated_missing_and_ambiguous_wikilinks(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

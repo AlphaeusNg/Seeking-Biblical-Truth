@@ -313,6 +313,28 @@ def serialize_dataset(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
+def format_dataset_summary(data: dict) -> str:
+    """One-screen vault snapshot for --check / --report-links (no note edits)."""
+    counts = data.get("counts") or {}
+    diagnostics = data.get("linkDiagnostics") or {}
+    unresolved = diagnostics.get("unresolved") or []
+    ambiguous = diagnostics.get("ambiguous") or []
+    folders = data.get("folders") or []
+    return "\n".join(
+        [
+            (
+                f"Vault snapshot: {counts.get('notes', 0)} notes, "
+                f"{counts.get('canvas', 0)} canvas, {counts.get('links', 0)} links, "
+                f"{len(folders)} folders."
+            ),
+            (
+                f"Link health: {len(unresolved)} unresolved, "
+                f"{len(ambiguous)} ambiguous."
+            ),
+        ]
+    )
+
+
 def format_link_diagnostics(data: dict) -> str:
     """Return unresolved and ambiguous note links grouped for human triage."""
     diagnostics = data["linkDiagnostics"]
@@ -361,16 +383,37 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Vault root. Defaults to current directory.")
     parser.add_argument("--output", type=Path, default=Path("pages/vault-data.json"), help="Output JSON path.")
-    parser.add_argument(
+    report = parser.add_mutually_exclusive_group()
+    report.add_argument(
         "--report-links",
         action="store_true",
         help="Print unresolved/ambiguous links without writing the dataset.",
+    )
+    report.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify the committed dataset matches the vault and print a summary. Does not write.",
     )
     args = parser.parse_args()
 
     data = build_dataset(args.root.resolve())
     if args.report_links:
+        print(format_dataset_summary(data))
+        print()
         print(format_link_diagnostics(data))
+        return
+    if args.check:
+        print(format_dataset_summary(data))
+        print()
+        print(format_link_diagnostics(data))
+        payload = serialize_dataset(data)
+        try:
+            current = args.output.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            parser.exit(1, f"ERROR: committed dataset missing or unreadable: {args.output}\n")
+        if current != payload:
+            parser.exit(1, f"ERROR: committed dataset is stale: {args.output}\n")
+        print("Committed dataset matches vault sources.")
         return
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(serialize_dataset(data), encoding="utf-8")
