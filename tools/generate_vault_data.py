@@ -55,10 +55,14 @@ def excerpt(text: str) -> str:
     return cleaned[:360]
 
 
+def is_hidden_part(part: str) -> bool:
+    return part.startswith(".")
+
+
 def is_content_file(path: Path) -> bool:
     return (
         path.as_posix() not in EXCLUDED_ROOT_FILES
-        and not any(part in EXCLUDED_PARTS for part in path.parts)
+        and not any(part in EXCLUDED_PARTS or is_hidden_part(part) for part in path.parts)
     )
 
 

@@ -7,7 +7,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.generate_vault_data import build_dataset, format_link_diagnostics
+from tools.generate_vault_data import (
+    build_dataset,
+    format_link_diagnostics,
+    is_content_file,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +20,25 @@ GENERATOR = ROOT / "tools" / "generate_vault_data.py"
 
 
 class VaultDatasetTests(unittest.TestCase):
+    def test_excludes_hidden_configuration_markdown_from_discovery(self) -> None:
+        self.assertFalse(is_content_file(Path(".obsidian") / "workspace.md"))
+        self.assertFalse(is_content_file(Path(".github") / "ISSUE_TEMPLATE.md"))
+        self.assertFalse(is_content_file(Path(".hidden.md")))
+        self.assertTrue(is_content_file(Path("Word of God") / "Grace.md"))
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            public = root / "Word of God" / "Grace.md"
+            public.parent.mkdir()
+            public.write_text("# Grace\n", encoding="utf-8")
+            hidden = root / ".obsidian" / "Note.md"
+            hidden.parent.mkdir()
+            hidden.write_text("# Editor only\n", encoding="utf-8")
+
+            dataset = build_dataset(root)
+            paths = {note["path"] for note in dataset["nodes"] if note.get("path")}
+            self.assertEqual(paths, {"Word of God/Grace.md"})
+
     def test_formats_link_diagnostics_by_source_with_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
