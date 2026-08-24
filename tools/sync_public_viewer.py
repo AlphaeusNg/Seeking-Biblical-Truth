@@ -45,6 +45,15 @@ class RepositoryStatus:
     untracked: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class FileSnapshot:
+    """Original generated-file state used to roll back a partial pair write."""
+
+    existed: bool
+    content: bytes
+    mode: int
+
+
 def _matches(path: Path, payload: str) -> bool:
     try:
         return path.is_file() and path.read_text(encoding="utf-8") == payload
@@ -52,22 +61,46 @@ def _matches(path: Path, payload: str) -> bool:
         return False
 
 
-def _write_if_changed(path: Path, payload: str) -> bool:
-    if _matches(path, payload):
-        return False
+def _replace_bytes(path: Path, payload: bytes, mode: int) -> None:
+    """Atomically replace one generated file with exact bytes and permissions."""
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     temp_path = Path(temp_name)
     try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as output:
+        with os.fdopen(descriptor, "wb") as output:
             output.write(payload)
-        mode = stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o644
         temp_path.chmod(mode)
         temp_path.replace(path)
     except BaseException:
         temp_path.unlink(missing_ok=True)
         raise
+
+
+def _write_if_changed(path: Path, payload: str) -> bool:
+    if _matches(path, payload):
+        return False
+    mode = stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o644
+    _replace_bytes(path, payload.encode("utf-8"), mode)
     return True
+
+
+def _snapshot_file(path: Path) -> FileSnapshot:
+    """Capture bytes and permissions before any file in a pair is changed."""
+    try:
+        return FileSnapshot(
+            existed=True,
+            content=path.read_bytes(),
+            mode=stat.S_IMODE(path.stat().st_mode),
+        )
+    except FileNotFoundError:
+        return FileSnapshot(existed=False, content=b"", mode=0o644)
+
+
+def _restore_file(path: Path, snapshot: FileSnapshot) -> None:
+    if snapshot.existed:
+        _replace_bytes(path, snapshot.content, snapshot.mode)
+    else:
+        path.unlink(missing_ok=True)
 
 
 def _validate_public_target(public_output: Path) -> None:
@@ -228,13 +261,31 @@ def sync_public_viewer(
             raise SyncError("; ".join(issues))
         return []
 
-    changed = []
-    for label, path in (
+    targets = (
         ("source export", source_output),
         ("public viewer copy", public_output),
-    ):
-        if _write_if_changed(path, payload):
-            changed.append(label)
+    )
+    snapshots = {path: _snapshot_file(path) for _, path in targets}
+    changed = []
+    written = []
+    try:
+        for label, path in targets:
+            if _write_if_changed(path, payload):
+                changed.append(label)
+                written.append(path)
+    except BaseException as error:
+        rollback_failures = []
+        for path in reversed(written):
+            try:
+                _restore_file(path, snapshots[path])
+            except BaseException as rollback_error:
+                rollback_failures.append(f"{path}: {rollback_error}")
+        if rollback_failures:
+            raise SyncError(
+                "dataset sync failed and rollback was incomplete: "
+                + "; ".join(rollback_failures)
+            ) from error
+        raise
     return changed
 
 

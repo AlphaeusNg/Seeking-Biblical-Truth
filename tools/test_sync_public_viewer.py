@@ -5,7 +5,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
+import tools.sync_public_viewer as sync_module
 from tools.sync_public_viewer import SyncError, sync_public_viewer
 
 
@@ -79,6 +81,30 @@ class PublicViewerSyncTests(unittest.TestCase):
         self.assertEqual(
             sync_public_viewer(self.vault_root, self.public_output, check=True), []
         )
+
+    def test_sync_rolls_back_source_when_public_write_fails(self) -> None:
+        sync_public_viewer(self.vault_root, self.public_output)
+        source_output = self.vault_root / "pages" / "vault-data.json"
+        source_before = source_output.read_bytes()
+        public_before = self.public_output.read_bytes()
+        (self.vault_root / "Index.md").write_text("# Changed\n", encoding="utf-8")
+        original_write = sync_module._write_if_changed
+
+        def fail_public_write(path: Path, payload: str) -> bool:
+            if path == self.public_output.resolve():
+                raise OSError("simulated public write failure")
+            return original_write(path, payload)
+
+        with mock.patch.object(
+            sync_module,
+            "_write_if_changed",
+            side_effect=fail_public_write,
+        ):
+            with self.assertRaisesRegex(OSError, "simulated public write failure"):
+                sync_public_viewer(self.vault_root, self.public_output)
+
+        self.assertEqual(source_output.read_bytes(), source_before)
+        self.assertEqual(self.public_output.read_bytes(), public_before)
 
     def test_check_distinguishes_stale_source_export(self) -> None:
         sync_public_viewer(self.vault_root, self.public_output)
