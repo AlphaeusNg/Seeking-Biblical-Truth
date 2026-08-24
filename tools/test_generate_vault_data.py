@@ -489,6 +489,26 @@ class VaultDatasetTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Broken.canvas"):
                 build_dataset(root)
 
+    def test_invalid_canvas_structure_fails_with_its_relative_path(self) -> None:
+        invalid_payloads = (
+            "[]",
+            json.dumps({"nodes": "not-an-array", "edges": []}),
+            json.dumps({"nodes": ["not-an-object"], "edges": []}),
+            json.dumps({"nodes": [{"type": "file", "file": []}], "edges": []}),
+            json.dumps({"nodes": [{"type": "file"}], "edges": []}),
+            json.dumps({"nodes": [], "edges": ["not-an-object"]}),
+        )
+        for payload in invalid_payloads:
+            with self.subTest(payload=payload), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                (root / "Broken.canvas").write_text(payload, encoding="utf-8")
+
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "Invalid canvas structure: Broken.canvas",
+                ):
+                    build_dataset(root)
+
     def test_committed_dataset_matches_vault_sources(self) -> None:
         committed = json.loads(DATA_PATH.read_text(encoding="utf-8"))
         if committed != build_dataset(ROOT):

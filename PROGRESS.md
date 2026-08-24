@@ -1,18 +1,76 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-18 (Cycle 162 across the projects workspace; vault Cycle 73)
+Last updated: 2026-08-25 (vault Cycle 75)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: thirty-seven exporter, synchronization, redirect-shell,
+- Local verification: forty exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: exclude hidden configuration Markdown
+## Latest cycle: reject malformed canvas structures (Cycle 75)
+
+### Why this was selected
+
+The 26 unresolved references still require content-owner judgment. Inspection
+found an independent producer-boundary defect: syntactically valid canvas JSON
+with a list root, non-array `nodes`, non-object entries, or a non-string file
+path raised incidental `AttributeError` / `TypeError`; malformed edge entries
+were silently accepted into the public payload.
+
+### Changes
+
+- Added one canvas parser that validates the root object, object-array shape of
+  `nodes` and `edges`, and string paths for file nodes before dataset assembly.
+- Structural failures now use a stable `Invalid canvas structure` message with
+  the exact vault-relative path; syntax failures keep their existing distinct
+  `Invalid canvas JSON` contract.
+- Added six adversarial structures covering every consumed shape boundary.
+  Notes and the real canvas were not edited; both generated copies stay exact.
+- Reconciled the state log with already-shipped commit `c616d3f`, which added
+  the rich read-only snapshot/check output after Cycle 73 but had not been
+  recorded as vault Cycle 74.
+
+### Verification and scores
+
+- Test-first: four fixtures raised incidental exceptions and the malformed-edge
+  fixture exported successfully before validation.
+- `python3 -m unittest discover -s tools -p 'test_*.py'`: 40 passed.
+- Generator `--check`, paired `sync_public_viewer.py --check`, the complete
+  read-only link report, Python compilation, and `git diff --check` passed.
+- Public corpus is byte-identical at 55 notes, one canvas, 62 nodes, 99 links,
+  26 unresolved references, and zero ambiguous references.
+- Correctness/reliability: 5/10 → 9/10 (schema corruption fails before partial assembly).
+- Verifiability: 5/10 → 10/10 (six wrong-shape cases supplement invalid-JSON coverage).
+- Maintainability: 7/10 → 9/10 (one parser owns syntax and consumed-shape checks).
+- Security/robustness: 7/10 → 9/10 (unexpected structured input fails closed with bounded diagnostics).
+- Performance: 10/10 → 10/10 (one linear shape pass over a single small canvas).
+
+### Lessons and process improvements
+
+- Valid JSON is not necessarily valid application data; validate the exact
+  collection/item shapes before calling mapping methods or publishing raw data.
+- State load must compare the log with commits after its recorded cycle. A
+  shipped but unlogged improvement distorted the baseline test count from 40
+  back to 37.
+
+### Explicit next opportunity
+
+Content-owner classification of the 26 unresolved references remains locally
+blocked. Rotate to AlpArcade and reload its current backlog for the next small,
+test-backed reliability cycle.
+
+## Previous cycle: richer read-only vault checks (Cycle 74)
+
+- Commit `c616d3f` added `generate_vault_data.py --check`, richer count/link
+  snapshots for check and report commands, and three read-only CLI/formatting
+  contracts without changing the public corpus.
+
+## Previous cycle: exclude hidden configuration Markdown (Cycle 73)
 
 ### Why this was selected
 
@@ -450,6 +508,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
+| — | Reject malformed canvas structures before assembly | Correctness / robustness | Medium | Small / low | Six wrong-shape fixtures now fail with the exact canvas path; corpus is unchanged | Completed in Cycle 75 |
+| — | Print rich read-only check snapshots | Observability / DX | Low-medium | Small / low | Generator and paired sync checks report corpus/link health without writing | Completed in Cycle 74 |
 | — | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | Dot-directory and dot-file Markdown is omitted; public corpus unchanged | Completed in Cycle 73 |
 | — | Reject canonical note-path collisions | Correctness / portability | Medium | Small / low | Case-fold and percent-decode fixtures now fail closed before `by_path` can overwrite a source | Completed in Cycle 72 |
 | — | Require resolved source containment | Correctness / security | High | Small / low | Note and canvas escape fixtures now reject external or broken source targets before ingestion | Completed in Cycle 71 |
@@ -463,5 +523,5 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 ## Next cycle
 
 Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes. Workspace next: continue rotation and skip
-Car-Type-Classification-Service.
+before changing notes. Workspace next: rotate to AlpArcade and reload its
+current ranked backlog.

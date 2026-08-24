@@ -92,6 +92,9 @@ vault-relative path instead of deleting undecodable bytes, and valid source
 newline sequences are preserved in public note content. A discovered note or
 canvas may be a symlink only when its resolved target remains inside the vault;
 external and broken source links fail before any public dataset is assembled.
+Canvas sources must decode to an object whose `nodes` and `edges` are arrays of
+objects; malformed file nodes and structural corruption fail with the exact
+vault-relative canvas path.
 
 The generated `linkDiagnostics` section reports missing internal Markdown and
 wiki-link references, plus ambiguous wiki-links, without failing the export.

@@ -31,6 +31,31 @@ def read_source_text(path: Path, root: Path, kind: str) -> str:
         raise ValueError(f"Invalid UTF-8 in {kind}: {rel(path, root)}") from error
 
 
+def parse_canvas(text: str, relative: str) -> dict:
+    """Parse the canvas fields consumed by the exporter or fail predictably."""
+    try:
+        canvas = json.loads(text)
+    except json.JSONDecodeError as error:
+        raise ValueError(f"Invalid canvas JSON: {relative}") from error
+    if not isinstance(canvas, dict):
+        raise ValueError(f"Invalid canvas structure: {relative} (root must be an object)")
+
+    for field in ("nodes", "edges"):
+        entries = canvas.get(field, [])
+        if not isinstance(entries, list) or any(
+            not isinstance(entry, dict) for entry in entries
+        ):
+            raise ValueError(
+                f"Invalid canvas structure: {relative} ({field} must be an array of objects)"
+            )
+    for node in canvas.get("nodes", []):
+        if node.get("type") == "file" and not isinstance(node.get("file"), str):
+            raise ValueError(
+                f"Invalid canvas structure: {relative} (file nodes require a file path)"
+            )
+    return canvas
+
+
 def require_source_within_vault(path: Path, root: Path, kind: str) -> None:
     """Reject source entries whose resolved bytes live outside the vault."""
     relative = rel(path, root)
@@ -241,10 +266,7 @@ def build_dataset(root: Path) -> dict:
     for path in canvas_files:
         relative = rel(path, root)
         text = read_source_text(path, root, "canvas")
-        try:
-            canvas = json.loads(text)
-        except json.JSONDecodeError as error:
-            raise ValueError(f"Invalid canvas JSON: {relative}") from error
+        canvas = parse_canvas(text, relative)
         nodes.append(
             {
                 "id": relative,
