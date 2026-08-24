@@ -1,18 +1,70 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-25 (vault Cycle 75)
+Last updated: 2026-08-25 (vault Cycle 76)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: forty exporter, synchronization, redirect-shell,
+- Local verification: forty-one exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
   reports, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
 
-## Latest cycle: reject malformed canvas structures (Cycle 75)
+## Latest cycle: roll back partial pair writes (Cycle 76)
+
+### Why this was selected
+
+The 26 unresolved references still require content-owner judgment. The sync
+helper independently claimed to keep the source and public datasets together,
+but wrote them sequentially without pair-level recovery. A failure while
+replacing the public copy left the source copy updated and the public copy old.
+
+### Changes
+
+- Snapshot both generated files, including exact bytes and permissions, before
+  changing either copy.
+- Retain atomic per-file temporary replacement, now through one binary helper
+  shared by normal writes and restoration.
+- If any later write fails or is interrupted, restore every already-written
+  copy in reverse order. If restoration itself fails, raise an explicit
+  incomplete-rollback error rather than silently claiming synchronization.
+- Added a fault-injection regression that fails the public write after the
+  source replacement and proves both outputs retain their original bytes.
+  Notes, canvas content, and both generated datasets remain unchanged.
+
+### Verification and scores
+
+- Test-first: the injected public-write failure left the source dataset updated
+  with `# Changed` before implementation; the regression passes after rollback.
+- `python3 -m unittest discover -s tools -p 'test_*.py'`: 41 passed, up from 40.
+- Generator `--check`, paired sync `--check`, the complete link report, Python
+  compilation, and `git diff --check` passed.
+- Both generated copies remain byte-identical at SHA-256
+  `ece7d5dc8ff85e70dc2d5db3a090d35735a3f70c38e2fcbb79ef2d4af2dd578c`:
+  55 notes, one canvas, 62 nodes, 99 links, 26 unresolved references, and zero
+  ambiguous references.
+- Correctness/reliability: 5/10 → 9/10 (a second-write failure no longer creates drift).
+- Verifiability: 6/10 → 10/10 (the precise partial-failure boundary is injected).
+- Maintainability: 7/10 → 9/10 (one atomic byte replacement serves write and rollback).
+- Security/robustness: 8/10 → 9/10 (interruptions fail without silently publishing half a pair).
+- Performance: 10/10 → 9/10 (two small tracked JSON files are snapshotted once per write-mode sync).
+
+### Lessons and process improvements
+
+- Atomic replacement of each file does not make a multi-file operation atomic;
+  inject failure after the first mutation and verify the whole pair's state.
+- Preserve arbitrary original bytes during rollback rather than decoding them,
+  because recovery must work even when a stale tracked copy is malformed.
+
+### Explicit next opportunity
+
+Content-owner classification of the 26 unresolved references remains locally
+blocked. Rotate to the portfolio repository and inspect its canonical vault
+viewer boundary; preserve its owner-provided screenshot.
+
+## Previous cycle: reject malformed canvas structures (Cycle 75)
 
 ### Why this was selected
 
