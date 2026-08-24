@@ -45,6 +45,9 @@ replacing the public copy left the source copy updated and the public copy old.
   `ece7d5dc8ff85e70dc2d5db3a090d35735a3f70c38e2fcbb79ef2d4af2dd578c`:
   55 notes, one canvas, 62 nodes, 99 links, 26 unresolved references, and zero
   ambiguous references.
+- Hosted CI run `32776033306` passed all 41 tests, committed-export freshness,
+  and compilation in 7 seconds; Pages run `32776032020` deployed the unchanged
+  compatibility shell successfully.
 - Correctness/reliability: 5/10 → 9/10 (a second-write failure no longer creates drift).
 - Verifiability: 6/10 → 10/10 (the precise partial-failure boundary is injected).
 - Maintainability: 7/10 → 9/10 (one atomic byte replacement serves write and rollback).
