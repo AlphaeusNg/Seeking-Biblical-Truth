@@ -44,6 +44,9 @@ were silently accepted into the public payload.
   read-only link report, Python compilation, and `git diff --check` passed.
 - Public corpus is byte-identical at 55 notes, one canvas, 62 nodes, 99 links,
   26 unresolved references, and zero ambiguous references.
+- Hosted CI run `32764295485` passed all 40 tests, committed-export freshness,
+  and Python compilation; Pages run `32764292289` deployed the inert legacy
+  shell, whose live route still serves the canonical no-index redirect.
 - Correctness/reliability: 5/10 → 9/10 (schema corruption fails before partial assembly).
 - Verifiability: 5/10 → 10/10 (six wrong-shape cases supplement invalid-JSON coverage).
 - Maintainability: 7/10 → 9/10 (one parser owns syntax and consumed-shape checks).
