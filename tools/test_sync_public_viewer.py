@@ -250,6 +250,33 @@ class PublicViewerSyncTests(unittest.TestCase):
         self.assertEqual(self.git(source_root, "status", "--short").stdout, "")
         self.assertEqual(self.git(public_root, "status", "--short").stdout, "")
 
+    def test_hub_layout_check_keeps_source_and_public_copies_identical(self):
+        hub_vault = Path("/home/alph/projects/Seeking-Biblical-Truth")
+        hub_public = (
+            Path("/home/alph/projects/alphaeusng.github.io")
+            / "pages"
+            / "seeking-biblical-truth"
+            / "vault-data.json"
+        )
+        if not hub_vault.is_dir() or not hub_public.is_file():
+            self.skipTest("hub layout is not present")
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SYNC_SCRIPT),
+                "--check",
+                "--vault-root",
+                str(hub_vault),
+                "--public-output",
+                str(hub_public),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+        self.assertIn("byte-identical", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
