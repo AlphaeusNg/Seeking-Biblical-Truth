@@ -1,18 +1,70 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-08-25 (vault Cycle 76)
+Last updated: 2026-09-11 (vault Cycle 77)
 
 ## Current state
 
 - Branch: `main`; working tree was clean and aligned with `origin/main` at cycle start.
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
-- Local verification: forty-one exporter, synchronization, redirect-shell,
+- Owner checklist: `tools/unresolved-links.md` groups those 26 stubs as 20 scripture and 6 topical by source note.
+- Local verification: forty-five exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
-  reports, deterministic regeneration, and Python compilation.
-- Automated verification: least-privilege GitHub Actions runs all isolated tests, source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; sixteen policy assertions prevent workflow drift.
+  reports, checklist freshness, deterministic regeneration, and Python compilation.
+- Automated verification: least-privilege GitHub Actions runs all isolated tests, generator `--check` (dataset plus checklist), source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; seventeen policy assertions prevent workflow drift.
 
-## Latest cycle: roll back partial pair writes (Cycle 76)
+## Latest cycle: grouped unresolved-link checklist (Cycle 77)
+
+### Why this was selected
+
+The 26 unresolved references still require content-owner judgment and are
+scripture or topical stubs rather than path typos. The stdout report grouped
+by source note only, so the owner had no durable, checkable list split by kind.
+
+### Changes
+
+- Classify unresolved targets mechanically as scripture (Bible book plus
+  chapter or verse) or topical (everything else); no notes were created or
+  rewritten.
+- Emit a deterministic `tools/unresolved-links.md` grouped by kind and source
+  note via `--write-checklist`.
+- Extend generator `--check` so a missing or stale checklist fails closed
+  without writing the dataset or public viewer copy.
+- Cover grouping, CLI write/check isolation, and committed-file freshness with
+  unit tests; CI now runs `--check` beside the existing byte comparison.
+
+### Verification and scores
+
+- Test-first: the fixture vault of mixed scripture and topical stubs had no
+  grouped checklist, and `--check` ignored checklist drift.
+- `python3 -m unittest discover -s tools -p 'test_*.py'`: 45 passed, up from 41.
+- Generator `--report-links`, generator `--check`, paired sync `--check`,
+  Python compilation, and `git diff --check` passed.
+- Both generated dataset copies remain byte-identical at SHA-256
+  `ece7d5dc8ff85e70dc2d5db3a090d35735a3f70c38e2fcbb79ef2d4af2dd578c`:
+  55 notes, one canvas, 62 nodes, 99 links, 26 unresolved references, and zero
+  ambiguous references.
+- Correctness/reliability: 7/10 → 9/10 (checklist freshness is an executable invariant).
+- Verifiability: 7/10 → 10/10 (kind grouping, stale check, and committed file have contracts).
+- Maintainability: 7/10 → 9/10 (one formatter owns kind, source, and line order).
+- Security/robustness: 9/10 → 9/10 (check mode still writes nothing).
+- Performance: 10/10 → 10/10 (checklist rendering is a linear pass over 26 diagnostics).
+- Developer/content-owner experience: 6/10 → 9/10 (owner review is grouped and checkboxed).
+
+### Lessons and process improvements
+
+- When content edits are blocked, persist the decision list as generated
+  evidence rather than asking the owner to reconstruct it from stdout.
+- Treat generated review artifacts like export payloads: write deterministically
+  and fail `--check` when they drift.
+
+### Explicit next opportunity
+
+Content-owner classification of the 26 unresolved references can now use
+`tools/unresolved-links.md`. Do not invent notes from the checklist. Workspace
+next: rotate to the portfolio repository after this vault commit.
+
+## Previous cycle: roll back partial pair writes (Cycle 76)
 
 ### Why this was selected
 
@@ -541,6 +593,7 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Recent project evolution
 
+- Cycle 77: added a deterministic scripture/topical unresolved-link checklist with stale `--check`.
 - Cycle 72: rejected case-folded and percent-decoded explicit-path collisions
   before link resolution.
 - Cycle 71: required resolved Markdown and canvas sources to stay inside the
@@ -565,7 +618,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
-| 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Seven source notes expose exact missing targets; theological/content intent requires owner judgment |
+| 1 | Classify or resolve the 26 reported references | Content correctness / DX | Medium-high | Medium / medium | Checklist groups 20 scripture and 6 topical stubs; theological/content intent still requires owner judgment |
+| — | Emit a grouped unresolved-link checklist | Observability / DX | Medium | Small / low | Deterministic scripture vs topical file; `--check` fails if stale | Completed in Cycle 77 |
 | — | Reject malformed canvas structures before assembly | Correctness / robustness | Medium | Small / low | Six wrong-shape fixtures now fail with the exact canvas path; corpus is unchanged | Completed in Cycle 75 |
 | — | Print rich read-only check snapshots | Observability / DX | Low-medium | Small / low | Generator and paired sync checks report corpus/link health without writing | Completed in Cycle 74 |
 | — | Exclude hidden configuration Markdown from discovery | Security / maintainability | Low-medium | Small / low | Dot-directory and dot-file Markdown is omitted; public corpus unchanged | Completed in Cycle 73 |
@@ -580,6 +634,5 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Next cycle
 
-Local next: obtain content-owner classification for the 26 unresolved references
-before changing notes. Workspace next: rotate to AlpArcade and reload its
-current ranked backlog.
+Local next: obtain content-owner classification from `tools/unresolved-links.md`
+before changing notes. Workspace next: rotate to the portfolio repository.

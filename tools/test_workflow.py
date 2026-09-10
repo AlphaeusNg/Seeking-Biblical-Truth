@@ -23,6 +23,7 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertRegex(WORKFLOW, r"uses:\s*actions/setup-python@v7\b")
         self.assertRegex(WORKFLOW, r"python-version:\s*[\"']3\.12[\"']")
         self.assertIn("python3 -m unittest discover -s tools -p 'test_*.py'", WORKFLOW)
+        self.assertIn("python3 tools/generate_vault_data.py --check", WORKFLOW)
         self.assertIn(
             "python3 tools/generate_vault_data.py --output /tmp/vault-data.json",
             WORKFLOW,

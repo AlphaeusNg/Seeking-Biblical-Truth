@@ -52,6 +52,12 @@ python3 tools/sync_public_viewer.py --check
 # Read-only unresolved/ambiguous link report grouped by source note
 python3 tools/generate_vault_data.py --report-links
 
+# Write the owner checklist of unresolved scripture vs topical stubs
+python3 tools/generate_vault_data.py --write-checklist
+
+# Read-only dataset and unresolved-link checklist freshness
+python3 tools/generate_vault_data.py --check
+
 # Optional canonical viewer preview (run from the sibling portfolio checkout)
 cd /home/alph/projects/alphaeusng.github.io
 python3 -m http.server 8001
