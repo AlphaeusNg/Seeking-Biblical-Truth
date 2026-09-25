@@ -115,6 +115,26 @@ python3 tools/generate_vault_data.py --report-links
 Report mode is read-only: it rebuilds diagnostics from the vault sources in
 memory and does not touch either tracked dataset copy.
 
+Draft notes stay out of the public dataset when their opening YAML block sets
+`draft: true`, or when their exact vault-relative path is listed in
+`tools/export-exclusions.txt`. The default list is empty, so notes exported
+today stay exported. Exclusion does not publish the note body through excerpts
+or canvas file nodes. Export exclusion does not make files private in a public
+Git repository.
+
+```bash
+python3 tools/generate_vault_data.py --preview-exclusions
+python3 tools/generate_vault_data.py --preview-rename "Old/Note.md" "New/Note.md"
+python3 tools/generate_vault_data.py --preview-export
+```
+
+`--preview-rename` lists incoming wiki links, Markdown note links, and canvas
+file references for one proposed move. Ambiguous sources and destinations are
+named and are not guessed. `--preview-export` compares the committed dataset
+with a fresh export and reports added or removed notes, changed bodies,
+resolved or broken links, and canvas changes. Neither preview writes this
+repo's `pages/vault-data.json` or the portfolio copy.
+
 ### Optional two-repository handoff
 
 After synchronizing, inspect both repositories from one read-only command:

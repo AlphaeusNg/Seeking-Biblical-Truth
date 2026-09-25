@@ -1,6 +1,31 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-09-11 (vault Cycle 77)
+Last updated: 2026-09-25 (vault tooling VAULT-02 through VAULT-05)
+
+## Tooling backlog
+
+VAULT-02 through VAULT-05 are in the exporter. The public corpus is unchanged:
+55 notes, one canvas, 62 nodes, 99 links, 26 unresolved references, and zero
+ambiguous references. SHA-256 of `pages/vault-data.json` remains
+`ece7d5dc8ff85e70dc2d5db3a090d35735a3f70c38e2fcbb79ef2d4af2dd578c`.
+
+- Discovery, link resolution, dataset assembly, and diagnostic formatting are
+  separate modules. Generator `--check` and a byte compare both match the
+  committed dataset.
+- `--preview-rename` lists incoming wiki, Markdown, and canvas references and
+  states ambiguous destinations. It does not modify files.
+- Draft export exclusion is opening YAML `draft: true` or an exact path in
+  `tools/export-exclusions.txt`. The default list is empty. Export exclusion
+  does not make files private in a public Git repository. Excluded bodies do
+  not appear in excerpts or canvas payloads.
+- `--preview-export` reports added and removed notes, changed bodies, resolved
+  and broken links, and canvas changes. It writes neither dataset copy.
+- VAULT-01 is blocked on the owner. `tools/stub-decisions.md` lists 26 stubs,
+  all `pending owner`. None is an exact path to an existing note. No theological
+  notes were added, rewritten, or deleted.
+
+`python3 -m unittest discover -s tools -p 'test_*.py'`: 51 passed.
+`python3 -m compileall -q tools` passed.
 
 ## Current state
 
@@ -8,9 +33,10 @@ Last updated: 2026-09-11 (vault Cycle 77)
 - Runtime: Obsidian vault plus deterministic Python export consumed by the public portfolio viewer.
 - Generated dataset: 55 public notes, one canvas, 62 nodes, 99 resolved links, 26 unresolved wiki-links, and zero ambiguous wiki-links.
 - Owner checklist: `tools/unresolved-links.md` groups those 26 stubs as 20 scripture and 6 topical by source note.
-- Local verification: forty-five exporter, synchronization, redirect-shell,
+- Local verification: fifty-one exporter, synchronization, redirect-shell,
   and workflow-policy contract tests, read-only link and cross-repository
-  reports, checklist freshness, deterministic regeneration, and Python compilation.
+  reports, checklist freshness, rename and exclusion previews, semantic export
+  preview, deterministic regeneration, and Python compilation.
 - Automated verification: least-privilege GitHub Actions runs all isolated tests, generator `--check` (dataset plus checklist), source-export freshness comparison, and compilation on Python 3.12 using current v7 actions; seventeen policy assertions prevent workflow drift.
 
 ## Latest cycle: grouped unresolved-link checklist (Cycle 77)
@@ -634,5 +660,6 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 
 ## Next cycle
 
-Local next: obtain content-owner classification from `tools/unresolved-links.md`
-before changing notes. Workspace next: rotate to the portfolio repository.
+Local next: VAULT-01 remains blocked. Obtain content-owner decisions in
+`tools/stub-decisions.md` before changing notes. Do not invent notes from the
+checklist. Workspace next: rotate to the portfolio repository.

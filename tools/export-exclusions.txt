@@ -1,0 +1,3 @@
+# Exact vault-relative Markdown paths to exclude from the public dataset.
+# A note is also excluded when its opening YAML block sets draft: true.
+# Export exclusion does not make files private in a public Git repository.
