@@ -1,6 +1,6 @@
 # Seeking Biblical Truth continuous improvement log
 
-Last updated: 2026-09-25 (vault tooling VAULT-02 through VAULT-05)
+Last updated: 2026-10-05 (vault tooling VAULT-07)
 
 ## Tooling backlog
 
@@ -23,8 +23,14 @@ ambiguous references. SHA-256 of `pages/vault-data.json` remains
 - VAULT-01 is blocked on the owner. `tools/stub-decisions.md` lists 26 stubs,
   all `pending owner`. None is an exact path to an existing note. No theological
   notes were added, rewritten, or deleted.
+- VAULT-07: `tools/report_stub_near_misses.py` prints exact-path matches and
+  case-folded filename near misses to stdout. The report is read-only and does
+  not change notes or stub decisions.
 
-`python3 -m unittest discover -s tools -p 'test_*.py'`: 51 passed.
+Cleanup verification 2026-10-05: converted the five new near-miss fixtures to
+`unittest.TestCase` so the existing CI command actually discovers them; no
+pytest dependency is needed. `python3 -m unittest discover -s tools -p 'test_*.py'`:
+56 passed. `sync_public_viewer.py --check` passes; both datasets stay unchanged.
 `python3 -m compileall -q tools` passed.
 
 ## Current state
