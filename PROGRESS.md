@@ -669,3 +669,8 @@ The workflow was already least-privilege, concurrent, and bounded, but setup-pyt
 Local next: VAULT-01 remains blocked. Obtain content-owner decisions in
 `tools/stub-decisions.md` before changing notes. Do not invent notes from the
 checklist. Workspace next: rotate to the portfolio repository.
+
+
+## 2026-10-07 — Include exclusions and diagnostics in export previews
+
+--preview-export now includes excluded drafts and grouped link diagnostics with exclusion reasons. A synthetic draft fixture and real-vault checks prove that previews write neither dataset copy. 57 Python tests and public-viewer sync checks passed; content and owner stub decisions are unchanged.

@@ -135,6 +135,10 @@ def main() -> None:
             raise SystemExit(1) from error
         after = build_dataset(args.root.resolve())
         print(format_export_changes(before, after))
+        print()
+        print(_exclusion_preview(args.root.resolve()))
+        print()
+        print(format_link_diagnostics(after))
         return
 
     data = build_dataset(args.root.resolve())

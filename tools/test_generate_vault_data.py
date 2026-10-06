@@ -1152,6 +1152,29 @@ class VaultDatasetTests(unittest.TestCase):
             self.assertIn("was written", absent.stdout)
             self.assertFalse(missing.exists())
 
+    def test_export_preview_includes_excluded_notes_and_link_reasons(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "Reader.md").write_text("[[Draft]]\n", encoding="utf-8")
+            draft = root / "Draft.md"
+            draft.write_text("Draft body\n", encoding="utf-8")
+            output = root / "pages" / "vault-data.json"
+            output.parent.mkdir()
+            output.write_text(serialize_dataset(build_dataset(root)), encoding="utf-8")
+            before = output.read_bytes()
+            draft.write_text("---\ndraft: true\n---\nDraft body\n", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(GENERATOR), "--root", str(root),
+                 "--output", str(output), "--preview-export"],
+                capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Excluded notes (1):", result.stdout)
+            self.assertIn("Draft.md", result.stdout)
+            self.assertIn("Reader.md", result.stdout)
+            self.assertIn("excluded from export", result.stdout)
+            self.assertEqual(output.read_bytes(), before)
+
     def test_real_vault_previews_do_not_write_either_dataset_copy(self) -> None:
         before = DATA_PATH.read_bytes()
         checklist = (ROOT / "tools" / "unresolved-links.md").read_bytes()
@@ -1184,6 +1207,8 @@ class VaultDatasetTests(unittest.TestCase):
         self.assertIn("Resolved links (0):", export_preview.stdout)
         self.assertIn("Broken links (0):", export_preview.stdout)
         self.assertIn("Canvas changes (0):", export_preview.stdout)
+        self.assertIn("Excluded notes (0):", export_preview.stdout)
+        self.assertIn("Link diagnostics:", export_preview.stdout)
 
         exclusion_preview = subprocess.run(
             [
