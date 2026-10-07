@@ -65,6 +65,8 @@ def parse_stub_rows(text: str) -> list[StubRow]:
         if len(cells) < len(HEADER):
             continue
         rows.append(StubRow(source=cells[1], stub=cells[2], status=cells[4]))
+    if not in_table:
+        raise ValueError("Missing stub decisions table header")
     return rows
 
 
@@ -131,7 +133,11 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError):
         print(f"ERROR: unreadable decisions: {decisions}", file=sys.stderr)
         return 2
-    rows = parse_stub_rows(decisions_text)
+    try:
+        rows = parse_stub_rows(decisions_text)
+    except ValueError as error:
+        print(f"ERROR: {error}: {decisions}", file=sys.stderr)
+        return 2
     if args.pending_only:
         rows = [row for row in rows if row.status.casefold() == "pending owner"]
     discovered = discover_vault(root)

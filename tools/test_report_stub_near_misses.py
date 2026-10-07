@@ -66,6 +66,14 @@ class StubNearMissTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
 
+    def test_missing_table_fails_instead_of_reporting_no_pending_work(self):
+        decisions = self.root / "decisions.md"
+        decisions.write_text("# Decisions\nNo table header\n", encoding="utf-8")
+        result = run_report(self.root, decisions)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Missing stub decisions table header", result.stderr)
+        self.assertEqual(result.stdout, "")
+
     def test_bare_title_is_near_miss_not_exact(self) -> None:
         tmp_path = self.root
         write_note(tmp_path, "notes/Faith.md")

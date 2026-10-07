@@ -684,3 +684,7 @@ The --pending-only report reads Status and counts only pending owner decisions. 
 ## 2026-10-07 — Export read-only structured stub decisions
 
 The owner-review report accepts --json with optional --pending-only. Each row retains its source, status and separate exact/near matches; output goes only to stdout. Validation: 59 Python tests, byte-identical public viewer sync and compilation passed. All 26 unresolved owner decisions remain pending; notes and datasets were unchanged.
+
+## 2026-10-07 — Fail visibly when the decisions table is missing
+
+The read-only stub report exits 2 with a diagnostic if its expected table header is absent. It no longer reports an apparently empty backlog for a renamed or damaged header. 60 Python tests, compilation and byte-identical viewer sync passed. All 26 owner decisions remain pending; no note or dataset changed.
