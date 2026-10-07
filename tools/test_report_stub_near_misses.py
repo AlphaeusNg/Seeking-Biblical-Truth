@@ -152,3 +152,24 @@ class StubNearMissTests(unittest.TestCase):
         assert "NEAR MISS\nFaith\t" in result.stdout
         assert "EXACT\nnotes/Belief.md\t" in result.stdout
         assert vault_snapshot(tmp_path) == before
+
+
+    def test_pending_filter_excludes_resolved_rows_without_writing(self) -> None:
+        write_note(self.root, "notes/Faith.md")
+        write_note(self.root, "notes/Belief.md")
+        decisions = self.root / "tools" / "stub-decisions.md"
+        write_decisions(decisions, [
+            ("topical", "Source.md", "Faith"),
+            ("topical", "Source.md", "Belief"),
+        ])
+        decisions.write_text(decisions.read_text().replace("Belief | 1 | pending owner", "Belief | 1 | resolved"))
+        before = vault_snapshot(self.root)
+        result = subprocess.run([
+            sys.executable, str(SCRIPT), "--root", str(self.root),
+            "--decisions", str(decisions), "--pending-only",
+        ], capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Pending owner decisions: 1", result.stdout)
+        self.assertIn("Faith\t", result.stdout)
+        self.assertNotIn("Belief\t", result.stdout)
+        self.assertEqual(vault_snapshot(self.root), before)

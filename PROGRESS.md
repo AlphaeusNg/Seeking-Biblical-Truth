@@ -674,3 +674,8 @@ checklist. Workspace next: rotate to the portfolio repository.
 ## 2026-10-07 — Include exclusions and diagnostics in export previews
 
 --preview-export now includes excluded drafts and grouped link diagnostics with exclusion reasons. A synthetic draft fixture and real-vault checks prove that previews write neither dataset copy. 57 Python tests and public-viewer sync checks passed; content and owner stub decisions are unchanged.
+
+
+## 2026-10-07 — Filter the read-only stub report to pending decisions
+
+The --pending-only report reads Status and counts only pending owner decisions. Resolved rows disappear without any note or decision-table mutation. Validation: 58 Python tests and byte-identical public viewer sync passed. All 26 current unresolved stubs still require owner decisions; no theological content was invented.

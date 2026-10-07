@@ -30,6 +30,7 @@ NEAR_HEADER = "NEAR MISS"
 class StubRow:
     source: str
     stub: str
+    status: str = "pending owner"
 
 
 @dataclass(frozen=True)
@@ -62,7 +63,7 @@ def parse_stub_rows(text: str) -> list[StubRow]:
             continue
         if len(cells) < len(HEADER):
             continue
-        rows.append(StubRow(source=cells[1], stub=cells[2]))
+        rows.append(StubRow(source=cells[1], stub=cells[2], status=cells[4]))
     return rows
 
 
@@ -111,6 +112,8 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Stub decisions table. Defaults to tools/stub-decisions.md under the vault root.",
     )
+    parser.add_argument("--pending-only", action="store_true",
+                        help="Inspect only rows still awaiting an owner decision. Writes nothing.")
     args = parser.parse_args(argv)
     root = args.root if args.root is not None else Path(__file__).resolve().parents[1]
     if not root.is_dir():
@@ -126,7 +129,13 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError):
         print(f"ERROR: unreadable decisions: {decisions}", file=sys.stderr)
         return 2
-    sys.stdout.write(report_stub_near_misses(root, decisions_text))
+    if args.pending_only:
+        rows = [row for row in parse_stub_rows(decisions_text) if row.status.casefold() == "pending owner"]
+        discovered = discover_vault(root)
+        exact, near = classify_stubs(discovered.index, rows)
+        sys.stdout.write(f"Pending owner decisions: {len(rows)}\n\n" + format_report(exact, near))
+    else:
+        sys.stdout.write(report_stub_near_misses(root, decisions_text))
     return 0
 
 

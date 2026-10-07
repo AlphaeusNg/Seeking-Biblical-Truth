@@ -183,3 +183,11 @@ Then open a pull request on GitHub.
 - Do not reintroduce `bible_repo/holybooks` as a gitlink unless a valid `.gitmodules` URL is also committed.
 - After editing notes, run `python3 tools/sync_public_viewer.py`; it updates both the source export and the portfolio viewer copy from one canonical in-memory payload.
 - Run `python3 tools/sync_public_viewer.py --check` before committing. Commit and push each repository separately when both copies changed.
+
+To review only unresolved stub decisions without changing notes:
+
+```bash
+python3 tools/report_stub_near_misses.py --pending-only
+```
+
+The report counts pending owner decisions and excludes rows already resolved in the decision table.
