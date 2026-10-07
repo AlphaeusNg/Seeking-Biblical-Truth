@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import json
 import sys
 import tempfile
 import unittest
@@ -172,4 +173,23 @@ class StubNearMissTests(unittest.TestCase):
         self.assertIn("Pending owner decisions: 1", result.stdout)
         self.assertIn("Faith\t", result.stdout)
         self.assertNotIn("Belief\t", result.stdout)
+        self.assertEqual(vault_snapshot(self.root), before)
+
+
+    def test_json_report_preserves_sources_status_and_matches(self) -> None:
+        write_note(self.root, "notes/Faith.md")
+        decisions = self.root / "tools" / "stub-decisions.md"
+        write_decisions(decisions, [("topical", "Source.md", "Faith")])
+        before = vault_snapshot(self.root)
+        result = subprocess.run([
+            sys.executable, str(SCRIPT), "--root", str(self.root),
+            "--decisions", str(decisions), "--pending-only", "--json",
+        ], capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report["count"], 1)
+        self.assertEqual(report["decisions"][0], {
+            "source": "Source.md", "stub": "Faith", "status": "pending owner",
+            "exact": [], "near": ["notes/Faith.md"],
+        })
         self.assertEqual(vault_snapshot(self.root), before)

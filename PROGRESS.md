@@ -679,3 +679,8 @@ checklist. Workspace next: rotate to the portfolio repository.
 ## 2026-10-07 — Filter the read-only stub report to pending decisions
 
 The --pending-only report reads Status and counts only pending owner decisions. Resolved rows disappear without any note or decision-table mutation. Validation: 58 Python tests and byte-identical public viewer sync passed. All 26 current unresolved stubs still require owner decisions; no theological content was invented.
+
+
+## 2026-10-07 — Export read-only structured stub decisions
+
+The owner-review report accepts --json with optional --pending-only. Each row retains its source, status and separate exact/near matches; output goes only to stdout. Validation: 59 Python tests, byte-identical public viewer sync and compilation passed. All 26 unresolved owner decisions remain pending; notes and datasets were unchanged.

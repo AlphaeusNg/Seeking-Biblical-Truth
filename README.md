@@ -191,3 +191,11 @@ python3 tools/report_stub_near_misses.py --pending-only
 ```
 
 The report counts pending owner decisions and excludes rows already resolved in the decision table.
+
+For a structured, read-only owner review, add `--json`:
+
+```bash
+python3 tools/report_stub_near_misses.py --pending-only --json
+```
+
+Each decision includes its source, status, exact matches and title near misses. The command writes only to stdout.
