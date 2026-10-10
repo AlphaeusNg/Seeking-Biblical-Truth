@@ -74,6 +74,16 @@ class StubNearMissTests(unittest.TestCase):
         self.assertIn("Missing stub decisions table header", result.stderr)
         self.assertEqual(result.stdout, "")
 
+    def test_malformed_rows_fail_without_hiding_pending_work(self):
+        for row in ("| topical | source | stub |", "| topical | source | stub | 1 | pending owner | extra |", "| topical | source | | 1 | pending owner |"):
+            with self.subTest(row=row):
+                decisions = self.root / "decisions.md"
+                decisions.write_text("| Kind | Source | Stub | Lines | Status |\n|---|---|---|---|---|\n" + row + "\n", encoding="utf-8")
+                result = run_report(self.root, decisions)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("Malformed stub decisions row at line 3", result.stderr)
+                self.assertEqual(result.stdout, "")
+
     def test_bare_title_is_near_miss_not_exact(self) -> None:
         tmp_path = self.root
         write_note(tmp_path, "notes/Faith.md")

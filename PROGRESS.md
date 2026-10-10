@@ -688,3 +688,9 @@ The owner-review report accepts --json with optional --pending-only. Each row re
 ## 2026-10-07 — Fail visibly when the decisions table is missing
 
 The read-only stub report exits 2 with a diagnostic if its expected table header is absent. It no longer reports an apparently empty backlog for a renamed or damaged header. 60 Python tests, compilation and byte-identical viewer sync passed. All 26 owner decisions remain pending; no note or dataset changed.
+
+## 2026-10-11 — Report malformed owner-decision rows
+
+The read-only stub report fails with the offending line for wrong cell counts or missing source, stub or status. It cannot silently hide malformed pending rows. No notes or owner decisions were edited.
+
+Validation: 61 Python tests, compileall and byte-identical viewer sync; 26 unresolved stubs remain owner decisions.
