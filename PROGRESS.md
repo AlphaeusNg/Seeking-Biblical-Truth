@@ -694,3 +694,9 @@ The read-only stub report exits 2 with a diagnostic if its expected table header
 The read-only stub report fails with the offending line for wrong cell counts or missing source, stub or status. It cannot silently hide malformed pending rows. No notes or owner decisions were edited.
 
 Validation: 61 Python tests, compileall and byte-identical viewer sync; 26 unresolved stubs remain owner decisions.
+
+## 2026-10-11 — Reject duplicate owner-decision rows
+
+The read-only report rejects a repeated normalized source/stub pair, names the second line, and writes nothing. Case and optional Markdown suffixes follow the existing reference normalization. Owner notes and decisions stay untouched.
+
+Validation: 62 Python tests, compileall and byte-identical public viewer sync; 26 unresolved stubs remain.

@@ -84,6 +84,17 @@ class StubNearMissTests(unittest.TestCase):
                 self.assertIn("Malformed stub decisions row at line 3", result.stderr)
                 self.assertEqual(result.stdout, "")
 
+    def test_duplicate_decisions_fail_with_the_second_row(self):
+        decisions = self.root / "decisions.md"
+        write_decisions(decisions, [("topical", "notes/Source.md", "Faith"),
+                                    ("topical", "notes/source.md", "faith")])
+        before = decisions.read_bytes()
+        result = run_report(self.root, decisions)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Duplicate stub decision at line 6", result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(decisions.read_bytes(), before)
+
     def test_bare_title_is_near_miss_not_exact(self) -> None:
         tmp_path = self.root
         write_note(tmp_path, "notes/Faith.md")

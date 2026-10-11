@@ -52,6 +52,7 @@ def parse_stub_rows(text: str) -> list[StubRow]:
     """Return source/stub pairs from the decisions table, ignoring prose."""
     rows: list[StubRow] = []
     in_table = False
+    seen = set()
     for line_number, line in enumerate(text.splitlines(), start=1):
         cells = _cells(line)
         if not in_table:
@@ -64,6 +65,10 @@ def parse_stub_rows(text: str) -> list[StubRow]:
             continue
         if len(cells) != len(HEADER) or any(not cells[index] for index in (1, 2, 4)):
             raise ValueError(f"Malformed stub decisions row at line {line_number}")
+        identity = (note_reference_key(cells[1]), note_reference_key(cells[2]))
+        if identity in seen:
+            raise ValueError(f"Duplicate stub decision at line {line_number}")
+        seen.add(identity)
         rows.append(StubRow(source=cells[1], stub=cells[2], status=cells[4]))
     if not in_table:
         raise ValueError("Missing stub decisions table header")
