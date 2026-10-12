@@ -700,3 +700,9 @@ Validation: 61 Python tests, compileall and byte-identical viewer sync; 26 unres
 The read-only report rejects a repeated normalized source/stub pair, names the second line, and writes nothing. Case and optional Markdown suffixes follow the existing reference normalization. Owner notes and decisions stay untouched.
 
 Validation: 62 Python tests, compileall and byte-identical public viewer sync; 26 unresolved stubs remain.
+
+## 2026-10-13 — Normalize filename near miss references
+
+Read-only near-miss reporting now decodes filename references and removes optional .md suffixes consistently with exact-path lookup. Notes and owner decisions stay unchanged.
+
+Validation: 63 Python tests, compilation, and byte-identical viewer sync passed: 55 notes, 1 canvas, 99 links and 26 unresolved.

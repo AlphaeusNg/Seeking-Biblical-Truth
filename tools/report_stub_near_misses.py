@@ -86,7 +86,7 @@ def classify_stubs(
         if exact_path is not None:
             exact.append(StubMatch(row.stub, row.source, exact_path))
             continue
-        for note in index.by_title.get(row.stub.casefold(), []):
+        for note in index.by_title.get(note_reference_key(row.stub), []):
             near.append(StubMatch(row.stub, row.source, note))
     return exact, near
 

@@ -147,6 +147,16 @@ class StubNearMissTests(unittest.TestCase):
         )
 
 
+    def test_encoded_filename_with_md_suffix_is_a_near_miss(self):
+        write_note(self.root, "notes/Living Faith.md")
+        decisions = self.root / "tools/stub-decisions.md"
+        write_decisions(decisions, [("topical", "Source.md", "Living%20Faith.MD")])
+        before = vault_snapshot(self.root)
+        result = run_report(self.root, decisions)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("NEAR MISS\nLiving%20Faith.MD\tSource.md\tnotes/Living Faith.md\n", result.stdout)
+        self.assertEqual(vault_snapshot(self.root), before)
+
     def test_unmatched_stub_is_omitted(self) -> None:
         tmp_path = self.root
         write_note(tmp_path, "notes/Other.md")
