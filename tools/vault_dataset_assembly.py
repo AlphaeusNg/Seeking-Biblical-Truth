@@ -118,7 +118,7 @@ def assemble_dataset(discovered) -> dict:
     seen_links: set[tuple[str, str, str]] = set()
     unresolved_links: list[dict] = []
     ambiguous_links: list[dict] = []
-    diagnostics_by_key: dict[tuple[str, str, str], dict] = {}
+    diagnostics_by_key: dict[tuple[str, str, str, str], dict] = {}
 
     def record_link_diagnostic(
         *,
@@ -130,7 +130,7 @@ def assemble_dataset(discovered) -> dict:
         candidates: list[str] | None = None,
         reason: str | None = None,
     ) -> None:
-        diagnostic_key = (source, note_reference_key(reference), kind)
+        diagnostic_key = (source, note_reference_key(reference), link_type, kind)
         diagnostic = diagnostics_by_key.get(diagnostic_key)
         if diagnostic is not None:
             diagnostic["lines"] = sorted({*diagnostic["lines"], line})

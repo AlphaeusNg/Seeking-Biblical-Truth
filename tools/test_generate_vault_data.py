@@ -342,6 +342,38 @@ class VaultDatasetTests(unittest.TestCase):
                 ],
             )
 
+    def test_diagnostic_lines_keep_wikilink_and_markdown_types_separate(self) -> None:
+        for excluded in (False, True):
+            with self.subTest(excluded=excluded), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                if excluded:
+                    (root / "Missing.md").write_text(
+                        "---\ndraft: true\n---\nDraft\n", encoding="utf-8"
+                    )
+                (root / "Index.md").write_text(
+                    "[[Missing]]\n"
+                    "[Missing](Missing.md)\n"
+                    "[[Missing.md]]\n"
+                    "[Again](./Missing.md)\n",
+                    encoding="utf-8",
+                )
+
+                data = build_dataset(root)
+                diagnostics = data["linkDiagnostics"]["unresolved"]
+                self.assertEqual(data["counts"]["unresolvedLinks"], 2)
+                self.assertEqual(
+                    [(row["type"], row["lines"]) for row in diagnostics],
+                    [("wikilink", [1, 3]), ("markdown", [2, 4])],
+                )
+                self.assertEqual(
+                    [row.get("reason") for row in diagnostics],
+                    ["excluded from export (frontmatter)"] * 2
+                    if excluded else [None, None],
+                )
+                report = format_link_diagnostics(data)
+                self.assertIn("wikilink (lines 1, 3)", report)
+                self.assertIn("markdown (lines 2, 4)", report)
+
     def test_excludes_repository_metadata_from_public_notes(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

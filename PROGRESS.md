@@ -706,3 +706,15 @@ Validation: 62 Python tests, compileall and byte-identical public viewer sync; 2
 Read-only near-miss reporting now decodes filename references and removes optional .md suffixes consistently with exact-path lookup. Notes and owner decisions stay unchanged.
 
 Validation: 63 Python tests, compilation, and byte-identical viewer sync passed: 55 notes, 1 canvas, 99 links and 26 unresolved.
+
+## 2026-10-13 — Keep diagnostic locations separate by link syntax
+
+Missing or excluded targets referenced through both wikilinks and Markdown links
+now retain separate diagnostics. Previously the exporter merged both sets of
+occurrence lines under the first link type, so the read-only report could label
+a Markdown line as a wikilink. Repeated references of the same type still merge.
+
+Validation: 64 Python tests passed, including missing and excluded mixed-syntax
+fixtures. Compilation, whitespace checks and byte-identical public viewer sync
+passed: 55 notes, 1 canvas, 99 links, 26 unresolved and zero ambiguous links.
+Notes, owner decisions and both generated dataset copies remain unchanged.
