@@ -198,4 +198,28 @@ For a structured, read-only owner review, add `--json`:
 python3 tools/report_stub_near_misses.py --pending-only --json
 ```
 
+### Published note connectivity
+
+Inspect isolated notes, notes without incoming or outgoing links, and connected
+study clusters without changing notes or either generated dataset:
+
+```bash
+python3 tools/report_graph_health.py
+python3 tools/report_graph_health.py --json
+```
+
+The report uses resolved wikilink and Markdown links between published notes.
+Folder membership and canvas edges do not connect notes; canvas mentions appear
+separately. Drafts and export exclusions are omitted. An isolated note has no
+incoming or outgoing note links; a note without incoming links may still link
+to other notes. These observations do not imply that a note needs changes.
+
+JSON schema version 1 includes `scope`, `counts` (notes, distinct directed
+`noteLinks`, isolated notes, components), path lists `isolated`,
+`withoutIncoming`, `withoutOutgoing`, undirected `components`, and `notes`.
+Each note has `path`, `incoming`, `outgoing` and `canvasMentions`; neighbor paths
+are unique and sorted. Duplicate link syntax between the same pair counts once.
+The report includes no note bodies or missing stub references. See the
+[feature roadmap](docs/FEATURE_ROADMAP.md) for scope, research and next priorities.
+
 Each decision includes its source, status, exact matches and title near misses. The command writes only to stdout.

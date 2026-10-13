@@ -52,6 +52,9 @@ python3 tools/sync_public_viewer.py --check
 # Read-only unresolved/ambiguous link report grouped by source note
 python3 tools/generate_vault_data.py --report-links
 
+# Read-only published note connectivity (or --json for schema version 1)
+python3 tools/report_graph_health.py
+
 # Write the owner checklist of unresolved scripture vs topical stubs
 python3 tools/generate_vault_data.py --write-checklist
 

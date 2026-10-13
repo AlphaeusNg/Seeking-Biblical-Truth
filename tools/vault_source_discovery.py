@@ -11,7 +11,7 @@ from urllib.parse import unquote
 
 
 EXCLUDED_PARTS = {".git", "__pycache__", "pages", "tools"}
-EXCLUDED_ROOT_FILES = {"AGENTS.md", "PROGRESS.md", "README.md"}
+EXCLUDED_ROOT_FILES = {"AGENTS.md", "PROGRESS.md", "README.md", "docs/FEATURE_ROADMAP.md"}
 EXPORT_EXCLUSIONS_FILE = Path("tools") / "export-exclusions.txt"
 _DRAFT_TRUE = re.compile(
     r"""^draft:\s*(?:true|"true"|'true')\s*(?:#.*)?$""",

@@ -718,3 +718,23 @@ Validation: 64 Python tests passed, including missing and excluded mixed-syntax
 fixtures. Compilation, whitespace checks and byte-identical public viewer sync
 passed: 55 notes, 1 canvas, 99 links, 26 unresolved and zero ambiguous links.
 Notes, owner decisions and both generated dataset copies remain unchanged.
+
+## 2026-10-14 — Report published note graph health
+
+Added `tools/report_graph_health.py` with human and versioned JSON output for
+isolated notes, notes without incoming/outgoing links, connected components,
+per-note neighbors and separate canvas mentions. Directed neighbors deduplicate
+wikilink/Markdown syntax; components ignore direction. Folder and canvas edges
+cannot conceal isolated notes. Export exclusions stay omitted; reports contain
+no note bodies or unresolved references and do not suggest content decisions.
+
+Researched Obsidian's official Graph view documentation and recorded the scope,
+acceptance criteria and follow-up priorities in `docs/FEATURE_ROADMAP.md` before
+implementation. Excluded that exact maintenance document from note discovery.
+
+Validation: 66 Python tests passed, with directed/duplicate/self-link, disconnected,
+canvas, draft/policy exclusion, malformed/empty/missing source, deterministic
+ordering and read-only SHA-256 snapshot checks. Compilation, whitespace and
+byte-identical public viewer sync passed. The real corpus reports 55 notes,
+41 directed neighbor pairs, 13 isolated notes and 18 components. Notes, both
+dataset copies and all 26 pending owner decisions remain unchanged.
