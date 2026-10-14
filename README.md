@@ -4,7 +4,7 @@ An Obsidian vault for rigorous exploration of Scripture, doctrine, truth-seeking
 
 ## Original Intent
 
-Welcome to my Obsidian Knowledge Base. This guide exists to help people access and explore my thoughts, and contribute if they want to.
+Read this public Obsidian vault and, if you want, contribute to it.
 
 The deeper idea is a Christian discussion and study environment where the main goal is **an open search for the closest Biblical truth**.
 
@@ -58,8 +58,7 @@ https://alphaeusng.github.io/pages/seeking-biblical-truth/
 ```
 
 The historical GitHub Pages paths for this repository remain as no-index
-redirects. To preview the canonical UI locally, serve the sibling portfolio
-checkout:
+redirects. Serve the sibling portfolio checkout to preview the canonical UI locally:
 
 ```bash
 cd /home/alph/projects/alphaeusng.github.io
@@ -106,7 +105,7 @@ intentionally excluded from vault diagnostics. The human-readable report prints
 those line numbers so each reference can be reviewed in context without
 changing note content.
 
-For a deterministic human-readable report grouped by source note, run:
+Run this for a deterministic human-readable report grouped by source note:
 
 ```bash
 python3 tools/generate_vault_data.py --report-links
@@ -137,7 +136,7 @@ repo's `pages/vault-data.json` or the portfolio copy.
 
 ### Optional two-repository handoff
 
-After synchronizing, inspect both repositories from one read-only command:
+Inspect both repositories from one read-only command after synchronizing:
 
 ```bash
 python3 tools/sync_public_viewer.py --git-status
@@ -145,8 +144,7 @@ python3 tools/sync_public_viewer.py --git-status
 
 The command first proves both dataset copies are current and byte-identical,
 then prints the complete short Git status for this vault and the sibling
-portfolio. To create the two local commits, explicitly stage the intended
-source notes/canvases and both generated datasets, then opt in:
+portfolio. Explicitly stage the intended source notes/canvases and both generated datasets, then opt in to create the two local commits:
 
 ```bash
 git add -- 'path/to/edited-note.md' pages/vault-data.json
