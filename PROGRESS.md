@@ -738,3 +738,10 @@ ordering and read-only SHA-256 snapshot checks. Compilation, whitespace and
 byte-identical public viewer sync passed. The real corpus reports 55 notes,
 41 directed neighbor pairs, 13 isolated notes and 18 components. Notes, both
 dataset copies and all 26 pending owner decisions remain unchanged.
+
+
+## 2026-10-16 — Report source failures without a traceback
+
+The read-only stub report now handles note discovery failures with one diagnostic and exit status 2, matching the graph-health CLI. A corrupt UTF-8 note previously escaped as an uncaught traceback. The regression proves empty stdout and unchanged source files. Notes, generated data and all 26 pending owner decisions are unchanged.
+
+Validation: all 67 Python tests, compilation, committed export/checklist freshness and byte-identical sibling viewer sync passed. The new corrupt-source regression failed before the fix.

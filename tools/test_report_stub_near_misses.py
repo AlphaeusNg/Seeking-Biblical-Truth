@@ -95,6 +95,18 @@ class StubNearMissTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertEqual(decisions.read_bytes(), before)
 
+    def test_invalid_note_fails_cleanly_without_partial_report_or_writes(self):
+        decisions = self.root / "tools" / "stub-decisions.md"
+        write_decisions(decisions, [("topical", "Source.md", "Faith")])
+        (self.root / "Broken.md").write_bytes(b"\xff")
+        before = vault_snapshot(self.root)
+        result = run_report(self.root, decisions)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Invalid UTF-8 in note: Broken.md", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertEqual(vault_snapshot(self.root), before)
+
     def test_bare_title_is_near_miss_not_exact(self) -> None:
         tmp_path = self.root
         write_note(tmp_path, "notes/Faith.md")

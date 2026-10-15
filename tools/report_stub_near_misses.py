@@ -145,8 +145,12 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     if args.pending_only:
         rows = [row for row in rows if row.status.casefold() == "pending owner"]
-    discovered = discover_vault(root)
-    exact, near = classify_stubs(discovered.index, rows)
+    try:
+        discovered = discover_vault(root)
+        exact, near = classify_stubs(discovered.index, rows)
+    except (OSError, ValueError, RuntimeError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
     if args.json:
         records = []
         for row in rows:
